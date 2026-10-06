@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { shop, cartDrawer, cartCount, expectLoaded, addProduct, openCartDrawer } = require('./shop');
+const { shop, cartDrawer, cartCount, expectLoaded, addProduct, chooseFirstOption, openCartDrawer } = require('./shop');
 
 const productList = page => page.getByRole('region', { name: 'Productlijst' });
 const productNames = page => productList(page).getByRole('listitem').getByRole('link').filter({ hasText: /\S/ });
@@ -90,6 +90,7 @@ test.describe('BBM2-73 Backend feedback', () => {
     await openCartDrawer(page);
     const before = await cartCount(page);
     await cartDrawer(page).getByRole('button', { name: /^Toevoegen aan winkelwagen/ }).first().click();
+    await chooseFirstOption(page);
     await expect.poll(() => cartCount(page), { message: 'The upsell product should be added' }).toBeGreaterThan(before);
     await expect(cartDrawer(page), 'The minicart should stay open').toBeVisible();
   });

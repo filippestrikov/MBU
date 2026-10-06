@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { shop, addProduct, fillDelivery, goToPayment, placeTestOrder } = require('./shop');
+const { hasAdmin, adminLogin, openLatestTestOrder } = require('./admin');
 
 // Full checkout flows on staging (MyParcel widget, Magewire steps) need more than the default 30s.
 test.describe.configure({ timeout: 120_000 });
@@ -107,5 +108,16 @@ test.describe('BBM2-73 / BBM2-74 / BBM2-76 payment and shipping', () => {
     await placeTestOrder(page);
     await expect(page.getByRole('row', { name: /Betaalmethode/ })).toContainText('Check / Money order');
     await expect(page.getByText(shop.product.name)).toBeVisible();
+
+    // Read-only Admin check: the order exists with its delivery information intact.
+    test.skip(!hasAdmin(), 'Admin check needs BULBBARN_ADMIN_* in .env.');
+    await adminLogin(page);
+    await openLatestTestOrder(page);
+    const order = page.locator('#anchor-content');
+    await expect(order).toContainText(`${shop.testOrder.firstname} ${shop.testOrder.lastname}`);
+    await expect(order).toContainText(shop.testOrder.street);
+    await expect(order).toContainText(/MyParcel/);
+    await expect(order).toContainText(/Deliver:\s*\d{2}-\d{2}-\d{4}/);
+    await expect(order).toContainText(shop.testOrder.label);
   });
 });

@@ -25,7 +25,13 @@ marked so it can be found and cleaned up in Magento:
 A full run places 3 orders (BBM2-73 MyParcel, BBM2-74, BBM2-76). Mollie methods are
 only selected, never paid.
 
-## Status (run 2026-10-06: 40 passed, 16 failed, 2 skipped)
+## Status (run 2026-10-06: 46 passed, 17 failed, 3 skipped)
+
+Full regression report for Jira: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md).
+
+Wishlist tests log in as the shared staging customer, add one product that is not yet
+on the wishlist and remove it again (from wishlist and cart) at the end. Admin tests
+are read-only.
 
 Local runs use 2 workers to limit load on the shared staging server.
 
@@ -42,15 +48,16 @@ Local runs use 2 workers to limit load on the shared staging server.
 | 7 | Selecting a colour swatch in the standard filter does not update the product list (only a count request is sent). | BBM2-73 |
 | 8 | "Apply Filters" in All filters reloads the whole page (`?color=`). | BBM2-73 |
 | 9 | Adding to cart on the PDP shows the "toegevoegd" message and does not open the minicart. | BBM2-73 |
-| 10 | "Toevoegen aan winkelwagen" on minicart upsell products does not add the product. | BBM2-73 |
+| 10 | Adding a minicart upsell product (via its options pop-up) closes the minicart. | BBM2-73 |
 | 11 | Mobile (412px) All-filters pop-up is 9px wider than the screen. | BBM2-85 |
 | 12 | Mobile category page has 20px horizontal overflow. | BBM2-85 |
 | 13 | No Trustpilot block on the homepage. | BBM2-85 |
 | 14 | Minicart quantity accepts 0. | BBM2-85 |
 | 15 | Intermittent: after several checkouts in a row MyParcel returns no delivery time slots (even after reload) and checkout stops with "The shipping method is missing". The affected test varies per run. | BBM2-69 / BBM2-73 checkout tests |
-
-Also noticed (not asserted): the mobile hamburger button is labelled "Menu sluiten"
-while the menu is closed, and the account-create page's submit button reads "Log in".
+| 16 | Mobile hamburger button is labelled "Menu sluiten" while the menu is closed (observed, not asserted). | — |
+| 17 | "Account aanmaken" submit button reads "Log in" (observed, not asserted). | — |
+| 18 | Sale product PDP shows original price € 49,00 for the first option; the wishlist shows € 4,90. | BBM2-85 |
+| 19 | Sale product options are all disabled; adding it fails with "required option(s) weren't entered". | BBM2-85 |
 
 ### Implemented
 
@@ -113,6 +120,15 @@ while the menu is closed, and the account-create page's submit button reads "Log
 | BBM2-85 | Display product options when adding configurable/custom-option items | Pass ("3 tubers" shown in cart). |
 | BBM2-85 | Calculate quantity, price and tax correctly after option changes | Pass (2 × € 14,85 = € 29,70; VAT line shown). |
 | BBM2-85 | Prevent invalid minicart quantity/removal behavior | **Fails** (finding 14). Removing the last item works. |
+| BBM2-85 | Highlight wishlisted products correctly on mobile | Pass. Wishlists a new product, checks the highlighted heart on the category page, then removes it. |
+| BBM2-85 | Add product to cart from Wishlist on mobile | Pass. Uses the options pop-up; cleans up cart and wishlist. |
+| BBM2-85 | Display correct original and current prices on mobile | **Fails** (findings 18 and 19). Uses `/test-product.html` (the only sale product found). |
+| BBM2-85 | Keep sticky total usable and non-overlapping | Skipped: no sticky total is rendered on the mobile cart; needs the design to confirm it should exist. |
+| BBM2-85 | Keep footer scrolling stable on mobile | Pass. Wheel scrolling around the footer moves in the requested direction without jumps; no scroll lock. |
+| BBM2-76 | Place order successfully after MyParcel serialization fix (Admin part) | Pass. Admin order view shows TEST customer, address, MyParcel shipping, delivery date and the test note. |
+| BBM2-113 | Display PlatformSVS status in Sales Order grid | Pass. "PlatformSVS Export" column shows a valid status for TEST orders (all "NOT EXPORTED"). |
+| BBM2-113 | Display PlatformSVS export information on order view | Pass (partial). Block present with "Not queued for PlatformSVS export yet."; attempts/supplier ID need an exported order. |
+| BBM2-74 | Verify EN, NL and DE store/language hierarchy | Pass. Admin Stores > All Stores lists NL, EN and DE store views. |
 
 ### Not automated yet: needs staging content or a design reference
 
@@ -133,5 +149,5 @@ while the menu is closed, and the account-create page's submit button reads "Log
 
 - BBM2-55 / BBM2-56 / BBM2-65: cases that edit content in the admin and check the storefront (intro text, FAQ add/edit/delete, featured-post switch, overview text). These change staging data and need agreed admin test accounts.
 - BBM2-113 (PlatformSVS), BBM2-74 (integrations/translations), BBM2-75 (PDFs), BBM2-76 (Anowave GA4), BBM2-80 (product import): admin, queue, log or API checks.
-- BBM2-73 MyParcel order placement in Admin, BBM2-76 Admin order check, BBM2-74 admin/config cases: can use the staging admin login in `.env` (`BULBBARN_ADMIN_*`).
-- BBM2-85 not yet automated: wishlist highlighting and add-from-wishlist (need a customer wishlist fixture), original/current price (needs a discounted product), sticky total overlap and footer scroll stability (visual).
+- Admin cases that **change** staging data (CMS text/FAQ edits, featured blog switch, configuration saves, retries/exports) are not automated: they would alter shared staging content. They can be added with an agreed revert step.
+- PlatformSVS export/retry/status sync, inventory and product sync (BBM2-113), PDFs (BBM2-75), logs/CLI (BBM2-76, BBM2-80) need server or API access.

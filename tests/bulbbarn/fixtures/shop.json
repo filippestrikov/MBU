@@ -4,6 +4,13 @@
     "name": "Dahlia 'Rancho'",
     "options": { "1 tuber": "€ 4,95", "3 tubers": "€ 14,85" }
   },
+  "saleProduct": {
+    "path": "/test-product.html",
+    "name": "Bishop of cantebury",
+    "badge": "In de aanbieding",
+    "originalPrice": "€ 4,90",
+    "currentPrice": "€ 3,90"
+  },
   "category": "/tulips.html",
   "searchTerm": "dahlia",
   "addedMessage": "toegevoegd aan je winkelwagen",

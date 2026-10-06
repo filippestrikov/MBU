@@ -1,5 +1,7 @@
 const { test, expect, devices } = require('@playwright/test');
-const { shop, cartButton, cartDrawer, expectLoaded, addProduct, cartTotal, cartSubtotal, horizontalOverflow } = require('./shop');
+const {
+  shop, cartButton, cartDrawer, cartCount, expectLoaded, addProduct, chooseFirstOption, cartTotal, cartSubtotal, horizontalOverflow,
+} = require('./shop');
 
 const { defaultBrowserType, ...pixel } = devices['Pixel 7'];
 test.use(pixel);
@@ -39,6 +41,84 @@ async function openMenu(page) {
   await expect(menu).toBeVisible();
   return menu;
 }
+
+const heartOf = card => card.locator('[data-addto="wishlist"]');
+const cardNamed = (page, name) => productList(page).getByRole('listitem')
+  .filter({ has: page.getByRole('link', { name, exact: true }) }).first();
+
+async function wishlistNames(page) {
+  await expectLoaded(await page.goto('/wishlist/'));
+  return (await page.getByRole('main').getByRole('listitem').getByRole('paragraph').getByRole('link').allInnerTexts())
+    .map(name => name.trim());
+}
+
+// Wishlists a category product that is not on the wishlist yet and returns its name.
+// Adding redirects to the wishlist page.
+async function wishlistNewProduct(page) {
+  const existing = await wishlistNames(page);
+  await expectLoaded(await page.goto(shop.category));
+  for (const card of await productList(page).getByRole('listitem').filter({ has: page.locator('[data-addto="wishlist"]') }).all()) {
+    const name = (await card.getByRole('link').last().innerText()).trim();
+    if (existing.includes(name)) continue;
+    await heartOf(card).scrollIntoViewIfNeeded();
+    await heartOf(card).tap();
+    await page.waitForURL(/\/wishlist\//);
+    expect(await wishlistNames(page), `${name} should be added to the wishlist`).toContain(name);
+    return name;
+  }
+  throw new Error('Every product on the category page is already wishlisted.');
+}
+
+async function removeFromWishlist(page, name) {
+  await expectLoaded(await page.goto('/wishlist/'));
+  const item = page.getByRole('main').getByRole('listitem').filter({ hasText: name }).first();
+  if (await item.isVisible()) {
+    const removed = page.waitForResponse(response => /wishlist\/index\/remove/.test(response.url()));
+    await item.getByRole('link', { name: 'Verwijder' }).tap();
+    await removed;
+    expect(await wishlistNames(page), 'Cleanup should remove the product').not.toContain(name);
+  }
+}
+
+// These tests change the shared staging customer's wishlist/cart and restore them afterwards.
+test.describe('BBM2-85 Wishlist (staging customer)', () => {
+  test.skip(!process.env.BULBBARN_CUSTOMER_EMAIL, 'Needs BULBBARN_CUSTOMER_EMAIL/PASSWORD in .env.');
+
+  test('[BBM2-85] Highlight wishlisted products correctly on mobile', async ({ page }) => {
+    await logIn(page);
+    const name = await wishlistNewProduct(page);
+    try {
+      await expectLoaded(await page.goto(shop.category));
+      const heart = heartOf(cardNamed(page, name));
+      await heart.scrollIntoViewIfNeeded();
+      await expect(heart, `${name} is on the wishlist and should be highlighted`).toHaveClass(/bg-green/);
+    } finally {
+      await removeFromWishlist(page, name);
+    }
+  });
+
+  test('[BBM2-85] Add product to cart from Wishlist on mobile', async ({ page }) => {
+    await logIn(page);
+    const name = await wishlistNewProduct(page);
+    try {
+      await expectLoaded(await page.goto('/wishlist/'));
+      const item = page.getByRole('main').getByRole('listitem').filter({ hasText: name }).first();
+      const before = await cartCount(page);
+      await item.getByRole('button', { name: /^Toevoegen aan winkelwagen/ }).tap();
+      await chooseFirstOption(page);
+      await expect.poll(() => cartCount(page), { message: 'The wishlist product should be added to the cart' }).toBeGreaterThan(before);
+      await cartButton(page).tap();
+      const line = cartDrawer(page).getByRole('listitem').filter({ hasText: name }).first();
+      await expect(line).toBeVisible();
+      // Clean up the customer's persistent cart.
+      const added = await cartCount(page);
+      await line.getByRole('button', { name: /^Verwijder product/ }).tap();
+      await expect.poll(() => cartCount(page), { message: 'Cleanup should remove the product from the cart' }).toBeLessThan(added);
+    } finally {
+      await removeFromWishlist(page, name);
+    }
+  });
+});
 
 test.describe('BBM2-85 Feedback mobile', () => {
   test('[BBM2-85] Show correct account links on Sign In / Sign Up screens', async ({ page }) => {
@@ -165,6 +245,47 @@ test.describe('BBM2-85 Feedback mobile', () => {
     await expect.poll(() => cartSubtotal(page), { message: 'Subtotal should be 2 × the 3-tuber price' })
       .toBeCloseTo(unit * 2, 2);
     await expect(page.getByRole('main').getByText(/Waarvan BTW/).first()).toBeVisible();
+  });
+
+  test('[BBM2-85] Display correct original and current prices on mobile', async ({ page }) => {
+    const sale = shop.saleProduct;
+    await expectLoaded(await page.goto(sale.path));
+    const main = page.getByRole('main');
+    await expect(main.getByText(sale.badge).first()).toBeVisible();
+    // The selected (first) option shows the original price and "Nu <current price>".
+    await expect(main.getByText(`Nu ${sale.currentPrice}`).first()).toBeVisible();
+    await expect.soft(main.getByText(sale.originalPrice, { exact: true }).first(), `The original price should be ${sale.originalPrice}, as in the wishlist`).toBeVisible();
+    await addProduct(page, { path: sale.path });
+    await expectLoaded(await page.goto('/checkout/cart/'));
+    await expect(page.getByRole('main').getByRole('article').filter({ hasText: sale.name }).first()).toContainText(sale.currentPrice);
+  });
+
+  test('[BBM2-85] Keep sticky total usable and non-overlapping', async ({ page }) => {
+    await addProduct(page);
+    await expectLoaded(await page.goto('/checkout/cart/'));
+    const sticky = await page.evaluate(() => [...document.querySelectorAll('body *')].some(el => {
+      const style = getComputedStyle(el);
+      const box = el.getBoundingClientRect();
+      return ['fixed', 'sticky'].includes(style.position) && box.width > 0 && box.bottom > 0 && box.top < innerHeight && /Totaal/.test(el.innerText);
+    }));
+    test.skip(!sticky, 'No sticky total is rendered on the mobile cart; needs the approved design to confirm it should exist.');
+  });
+
+  test('[BBM2-85] Keep footer scrolling stable on mobile', async ({ page }) => {
+    await expectLoaded(await page.goto('/'));
+    await page.locator('footer').scrollIntoViewIfNeeded();
+    const bottom = await page.evaluate(() => window.scrollY);
+    for (const delta of [-300, 200, -200, 300]) {
+      const before = await page.evaluate(() => window.scrollY);
+      await page.mouse.wheel(0, delta);
+      await expect.poll(() => page.evaluate(() => window.scrollY)).not.toBe(before);
+      const moved = (await page.evaluate(() => window.scrollY)) - before;
+      expect(Math.sign(moved), `Scrolling by ${delta}px should move the page the same way`).toBe(Math.sign(delta));
+      expect(Math.abs(moved), `Scrolling by ${delta}px should not jump`).toBeLessThanOrEqual(Math.abs(delta) + 50);
+    }
+    expect(await page.evaluate(() => getComputedStyle(document.body).overflow), 'The page should not be scroll-locked').not.toBe('hidden');
+    await page.locator('footer').getByRole('button', { name: 'Taal' }).tap();
+    expect(Math.abs((await page.evaluate(() => window.scrollY)) - bottom), 'Using a footer control should not jump the page').toBeLessThan(400);
   });
 
   test('[BBM2-85] Prevent invalid minicart quantity/removal behavior', async ({ page }) => {

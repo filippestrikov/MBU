@@ -16,8 +16,8 @@ async function cartCount(page) {
 }
 
 // Adds the fixture product from its PDP and waits for the header cart count to change.
-async function addProduct(page, { option, qty } = {}) {
-  await expectLoaded(await page.goto(shop.product.path));
+async function addProduct(page, { path = shop.product.path, option, qty } = {}) {
+  await expectLoaded(await page.goto(path));
   // The option radios re-render via Alpine, so click instead of check(); the cart verifies the choice.
   if (option) await page.getByRole('radio', { name: option, exact: true }).click();
   // The first quantity box is the main one; the second belongs to the sticky add-to-cart bar.
@@ -25,6 +25,15 @@ async function addProduct(page, { option, qty } = {}) {
   const before = await cartCount(page);
   await page.locator('#product-addtocart-button').click();
   await expect.poll(() => cartCount(page), { message: 'The cart count should increase' }).toBeGreaterThan(before);
+}
+
+// Quick-add buttons (minicart upsell, wishlist) open an options dialog: pick the first option and confirm.
+async function chooseFirstOption(page) {
+  const dialog = page.getByRole('dialog').filter({ visible: true })
+    .filter({ has: page.getByRole('button', { name: /^\d+\s+\S+\s+€/ }) }).last();
+  await expect(dialog, 'Choosing a product option should open').toBeVisible();
+  await dialog.getByRole('button', { name: /^\d+\s+\S+\s+€/ }).first().click();
+  await dialog.getByRole('button', { name: 'In Winkelwagen', exact: true }).click();
 }
 
 async function openCartDrawer(page) {
@@ -84,6 +93,6 @@ async function horizontalOverflow(page) {
 }
 
 module.exports = {
-  shop, cartButton, cartDrawer, expectLoaded, cartCount, addProduct, openCartDrawer,
+  shop, cartButton, cartDrawer, expectLoaded, cartCount, addProduct, chooseFirstOption, openCartDrawer,
   fillDelivery, goToPayment, placeTestOrder, cartTotal, cartSubtotal, horizontalOverflow,
 };
