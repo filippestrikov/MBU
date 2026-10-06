@@ -13,6 +13,8 @@ copy; update them only when the expected content is confirmed.
 
 Run with `npx playwright test --project=bulbbarn`.
 
+Team summary on Confluence: [02. BulbBarn - Playwright Test Automation](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation).
+
 ## Test orders
 
 Checkout tests place **real orders on staging only** (never on live). Every order is
