@@ -1,0 +1,110 @@
+{
+  "note": "Permanent TEST blog content on BulbBarn staging (Option A, agreed 2026-10-06). Created by scripts/seed-bulbbarn-blog.cjs.",
+  "authorId": "1",
+  "authorName": "Filip Pestrikov",
+  "categoryId": "1",
+  "imageFile": "scripts/assets/test-blog-image.png",
+  "showcase": {
+    "urlKey": "test-playwright-content-showcase",
+    "title": "TEST Playwright – Content showcase",
+    "h2": 1,
+    "h3": 2,
+    "images": 3,
+    "related": [
+      "TEST Playwright – Blog post 01",
+      "TEST Playwright – Blog post 02",
+      "TEST Playwright – Blog post 03"
+    ]
+  },
+  "posts": [
+    {
+      "title": "TEST Playwright – Blog post 01",
+      "urlKey": "test-playwright-blog-post-01",
+      "shortContent": "<p>TEST Playwright list post 01. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 01. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 02",
+      "urlKey": "test-playwright-blog-post-02",
+      "shortContent": "<p>TEST Playwright list post 02. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 02. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 03",
+      "urlKey": "test-playwright-blog-post-03",
+      "shortContent": "<p>TEST Playwright list post 03. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 03. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 04",
+      "urlKey": "test-playwright-blog-post-04",
+      "shortContent": "<p>TEST Playwright list post 04. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 04. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 05",
+      "urlKey": "test-playwright-blog-post-05",
+      "shortContent": "<p>TEST Playwright list post 05. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 05. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 06",
+      "urlKey": "test-playwright-blog-post-06",
+      "shortContent": "<p>TEST Playwright list post 06. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 06. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 07",
+      "urlKey": "test-playwright-blog-post-07",
+      "shortContent": "<p>TEST Playwright list post 07. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 07. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 08",
+      "urlKey": "test-playwright-blog-post-08",
+      "shortContent": "<p>TEST Playwright list post 08. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 08. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 09",
+      "urlKey": "test-playwright-blog-post-09",
+      "shortContent": "<p>TEST Playwright list post 09. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 09. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 10",
+      "urlKey": "test-playwright-blog-post-10",
+      "shortContent": "<p>TEST Playwright list post 10. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 10. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 11",
+      "urlKey": "test-playwright-blog-post-11",
+      "shortContent": "<p>TEST Playwright list post 11. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 11. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 12",
+      "urlKey": "test-playwright-blog-post-12",
+      "shortContent": "<p>TEST Playwright list post 12. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 12. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Blog post 13",
+      "urlKey": "test-playwright-blog-post-13",
+      "shortContent": "<p>TEST Playwright list post 13. Automated test content; do not publish to live.</p>",
+      "fullContent": "<p>TEST Playwright list post 13. Automated test content for pagination and overview checks.</p>"
+    },
+    {
+      "title": "TEST Playwright – Content showcase",
+      "urlKey": "test-playwright-content-showcase",
+      "shortContent": "<p>TEST Playwright content showcase: headings, images and related posts.</p>",
+      "fullContent": "<p>TEST Playwright content showcase. Automated test content.</p>\n<h2>TEST H2 – Timing is everything</h2>\n<p>Wait until the risk of frost has passed.</p>\n<h3>TEST H3 – How deep should you dig?</h3>\n<p>Plant each tuber about 10–15 cm deep.</p>\n<p><img src=\"https://staging-bulbbarn.mbu.dev/media/catalog/product/e/c/ecef27aec024f5d587361104a68dbebc746f19c60a6006ac5a7a184010823135.png\" alt=\"TEST image 1\" width=\"600\"></p>\n<p><img src=\"https://staging-bulbbarn.mbu.dev/media/catalog/product/4/0/409c48a0e69a9e56469873b4a5fde8e204106a17bd6a3ef744cb01bd16dd6023.jpeg\" alt=\"TEST image 2\" width=\"600\"></p>\n<p><img src=\"https://staging-bulbbarn.mbu.dev/media/catalog/product/8/3/837c9f18952f576b47fa1d868855e303e2a77580ceae8ced167fd4a7ea2bb621.png\" alt=\"TEST image 3\" width=\"600\"></p>\n<h3>TEST H3 – Water wisely</h3>\n<p>Water deeply once or twice a week.</p>",
+      "related": [
+        "TEST Playwright – Blog post 01",
+        "TEST Playwright – Blog post 02",
+        "TEST Playwright – Blog post 03"
+      ]
+    }
+  ]
+}

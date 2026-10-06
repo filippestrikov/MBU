@@ -1,9 +1,12 @@
 const { test, expect } = require('@playwright/test');
 const content = require('./fixtures/blog.json');
+const seed = require('./fixtures/blog-seed.json');
 
 const listSection = page => page.locator('section')
   .filter({ has: page.getByRole('heading', { level: 2, name: new RegExp(content.listHeading) }) });
 const postLinks = page => listSection(page).getByRole('link').filter({ has: page.getByRole('heading', { level: 3 }) });
+// Titles only: card text also holds relative dates ("15 seconds ago") that change between loads.
+const postTitles = page => listSection(page).getByRole('heading', { level: 3 });
 const featured = page => page.getByRole('main').getByRole('article').first();
 
 async function expectLoaded(response) {
@@ -43,12 +46,12 @@ test.describe('BBM2-65 Blog overview and single', () => {
     await openOverview(page);
     const total = await totalPosts(page);
     test.skip(total <= content.postsPerPage, `Needs more than ${content.postsPerPage} posts on staging; found ${total}.`);
-    const firstPage = await postLinks(page).allInnerTexts();
+    const firstPage = await postTitles(page).allInnerTexts();
     await page.getByRole('link', { name: /next|volgende/i }).click();
     await expect(page).toHaveURL(/[?&]p=2/);
-    expect(await postLinks(page).allInnerTexts(), 'Page 2 should show different posts').not.toEqual(firstPage);
+    expect(await postTitles(page).allInnerTexts(), 'Page 2 should show different posts').not.toEqual(firstPage);
     await page.getByRole('link', { name: /previous|vorige/i }).click();
-    await expect(postLinks(page)).toHaveText(firstPage);
+    await expect(postTitles(page)).toHaveText(firstPage);
   });
 
   test('[BBM2-65] Render Blog Overview responsively', async ({ page }) => {
@@ -69,5 +72,60 @@ test.describe('BBM2-65 Blog overview and single', () => {
     await back.scrollIntoViewIfNeeded();
     await back.click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(content.overviewHeading);
+  });
+});
+
+// Uses the permanent TEST content created by scripts/seed-bulbbarn-blog.cjs.
+test.describe('BBM2-65 Blog single (seeded TEST content)', () => {
+  const showcase = seed.showcase;
+  const body = page => page.locator('.amblog-post-content');
+
+  async function openShowcase(page) {
+    await expectLoaded(await page.goto(`/blog/${showcase.urlKey}.html`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(showcase.title);
+  }
+
+  test('[BBM2-65] Render H2 and H3 heading styles', async ({ page }) => {
+    await openShowcase(page);
+    const h2 = body(page).getByRole('heading', { level: 2 });
+    const h3 = body(page).getByRole('heading', { level: 3 });
+    await expect(h2).toHaveCount(showcase.h2);
+    await expect(h3).toHaveCount(showcase.h3);
+    const size = locator => locator.first().evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+    expect(await size(h2), 'H2 should render larger than H3').toBeGreaterThan(await size(h3));
+  });
+
+  test('[BBM2-65] Display multiple images in a blog post', async ({ page }) => {
+    await openShowcase(page);
+    const images = body(page).getByRole('img', { name: /^TEST image \d$/ });
+    await expect(images).toHaveCount(showcase.images);
+    const boxes = [];
+    for (const image of await images.all()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0), { message: 'Image should load' }).toBe(true);
+      // Page coordinates, so scrolling between images does not affect the order check.
+      boxes.push(await image.evaluate(img => {
+        const box = img.getBoundingClientRect();
+        return { top: box.top + window.scrollY, right: box.right };
+      }));
+    }
+    const tops = boxes.map(box => box.top);
+    expect(tops, 'Images should keep their content order').toEqual([...tops].sort((a, b) => a - b));
+    for (const box of boxes) expect(box.right, 'Images should fit the page').toBeLessThanOrEqual(page.viewportSize().width + 1);
+  });
+
+  test('[BBM2-65] Display three client-selected related blogs at bottom (seeded post)', async ({ page }) => {
+    await openShowcase(page);
+    const related = page.getByRole('main').getByRole('link', { name: new RegExp(showcase.related.map(t => t.replace(/[–-]/g, '.')).join('|')) });
+    await expect(related.filter({ visible: true }), 'The three related posts selected in Admin should be shown').toHaveCount(showcase.related.length);
+    const first = related.filter({ visible: true }).first();
+    const clicked = (await first.innerText()).trim();
+    await first.click();
+    await expect(page.getByRole('heading', { level: 1 }), 'A related post link should open that post')
+      .toHaveText(showcase.related.find(name => clicked.includes(name)) ?? clicked);
+  });
+
+  test('[BBM2-65] Support video in blog hero media', async () => {
+    test.skip(true, 'Needs a hero video configuration on a staging post (video source and how the theme sets it are not confirmed).');
   });
 });

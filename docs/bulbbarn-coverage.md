@@ -25,7 +25,7 @@ marked so it can be found and cleaned up in Magento:
 A full run places 3 orders (BBM2-73 MyParcel, BBM2-74, BBM2-76). Mollie methods are
 only selected, never paid.
 
-## Status (run 2026-10-06: 80 tests – 49 passed, 29 failed, 2 skipped)
+## Status (run 2026-10-06: 84 tests – 55 passed, 28 failed, 1 skipped)
 
 Full regression report: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md), filed as Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5).
 
@@ -84,8 +84,12 @@ Local runs use 2 workers to limit load on the shared staging server.
 | BBM2-55 | Display backend-managed FAQ questions | Pass against the fixture baseline. |
 | BBM2-55 | Load Delivery and Time staging subpage successfully | Pass. |
 | BBM2-65 | Display selected featured blog at top of Blog Overview | Pass. |
-| BBM2-65 | Show 12 blog posts per overview page | Skipped: staging has fewer than 13 posts. |
-| BBM2-65 | Paginate Blog Overview like category pages | Skipped: staging has fewer than 13 posts. |
+| BBM2-65 | Show 12 blog posts per overview page | **Fails**: 9 per page with 16 posts (report #28). |
+| BBM2-65 | Paginate Blog Overview like category pages | Pass (next/previous with seeded posts). |
+| BBM2-65 | Render H2 and H3 heading styles | Pass (seeded showcase post: H2 larger than H3). |
+| BBM2-65 | Display multiple images in a blog post | Pass (3 images load in order, fit the page). |
+| BBM2-65 | Display three client-selected related blogs at bottom (seeded post) | Pass (3 related posts shown and linked). |
+| BBM2-65 | Support video in blog hero media | Skipped: needs a video source and the way the theme sets a hero video. |
 | BBM2-65 | Render Blog Overview responsively | **Fails**: 4px horizontal overflow at 1440px; 768px and 375px pass. |
 | BBM2-65 | Return to Blog Overview from bottom button | **Fails**: "Terug naar overzicht" links to `/blog/`, which returns 403 Forbidden. |
 | BBM2-69 | Display Ideal-WERO logo instead of legacy iDEAL logo | **Fails** (finding 5). Checks the iDEAL option's accessible name for Wero branding; artwork needs a visual check. |
@@ -160,6 +164,15 @@ The Magento REST API ("Claude" integration) is not usable yet: staging's nginx H
 takes the `Authorization` header, so tokens never reach Magento. Exempting `/rest/` from
 HTTP auth (or allowlisting the test machine) would allow API-based setup and cleanup.
 
+### Seeded TEST blog content (permanent, agreed 2026-10-06)
+
+`node scripts/seed-bulbbarn-blog.cjs` creates (or repairs) 14 posts titled "TEST Playwright – …"
+on staging through Magento Admin: 13 list posts and a "Content showcase" post with H2/H3
+headings, 3 images (existing product images) and 3 related posts, author Filip Pestrikov.
+It is idempotent (`--dry-run` lists, `--limit=N` creates at most N). The staging blog
+therefore shows 16 posts; "Highlighted post" stays featured. Definitions:
+`tests/bulbbarn/fixtures/blog-seed.json`.
+
 ### Design checks (`tests/bulbbarn/design.spec.js`)
 
 Expectations come from the Figma file "Bulbbarn - Webshop - Hyvä" and are stored in
@@ -178,8 +191,8 @@ Figma at run time. Design copy is English, so text checks use the EN store view.
 | BBM2-55 | Reviews component | **Fails**: missing (#22). |
 | BBM2-55 | Sections in designed order | **Fails**: reviews missing (#22). |
 | BBM2-65 | Overview intro text from the design | **Fails** (#24). |
-| BBM2-65 | Three related blogs ("Relatable news") | **Fails** (#25). |
-| BBM2-65 | Author "Planted by" and reading time | **Fails** (#25). |
+| BBM2-65 | Three related blogs (design) | Pass on the seeded showcase post (label is Dutch on EN: #26). |
+| BBM2-65 | Author "Planted by" and reading time | **Fails**: author not shown (#25). |
 | BBM2-74 | No Dutch labels on the EN blog | **Fails** (#26). |
 | BBM2-63 | Favicon matches the Figma artwork (pixel comparison) | Pass. |
 | BBM2-85 | Sticky total on mobile cart / checkout (now two tests, no longer skipped) | **Fails** (#27). |
@@ -197,10 +210,7 @@ question), and Figma has no iDEAL | Wero asset yet (#5).
 | BBM2-55 | Keep contact block unchanged across subject subpages | Needs the contact block and a second real subpage. |
 | BBM2-55 | Display reviews component consistently with other pages | No reviews section is rendered. Needs the reference component. |
 | BBM2-55 | Display required page sections in the designed structure | Blocked by contact block and reviews. |
-| BBM2-65 | Support video in blog hero media | Needs a staging post with hero video. |
-| BBM2-65 | Render H2 and H3 heading styles | Needs a staging post with H2/H3 content (current posts have no body). |
-| BBM2-65 | Display multiple images in a blog post | Needs a staging post with several images. |
-| BBM2-65 | Display three client-selected related blogs at bottom | No related posts are rendered; needs three configured related posts. |
+| BBM2-65 | Support video in blog hero media | Needs a video source and how the theme shows a hero video (not a field in the post form). |
 
 ### Not automated: needs Magento admin changes, back-end access or real orders
 

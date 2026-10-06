@@ -56,6 +56,9 @@ npm run test:ui
 npm run test:report
 ```
 
+`node scripts/seed-bulbbarn-blog.cjs` creates the permanent "TEST Playwright" blog posts
+the BulbBarn blog tests rely on (idempotent; staging only).
+
 `npm run test:cms` runs the opt-in tests that temporarily edit staging content in
 Magento Admin (and restore it). Run it on its own, never together with `npm test`.
 

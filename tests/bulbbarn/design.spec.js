@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const design = require('./fixtures/design.json');
 const content = require('./fixtures/customer-service.json');
 const blog = require('./fixtures/blog.json');
+const seed = require('./fixtures/blog-seed.json');
 
 // Checks derived from the Figma design (see fixtures/design.json for frame ids).
 // Design copy is English, so text checks switch to the EN store view first.
@@ -120,13 +121,15 @@ test.describe('BBM2-65 Blog (design)', () => {
   });
 
   test('[BBM2-65] Display three client-selected related blogs at bottom', async ({ page }) => {
+    // The seeded showcase post has three related posts selected in Admin.
     await useEnglishStore(page);
-    await expectLoaded(await page.goto(blog.overviewPath));
-    await main(page).getByRole('article').first().getByRole('link').first().click();
+    await expectLoaded(await page.goto(`/blog/${seed.showcase.urlKey}.html`));
     await expect(main(page).getByRole('heading', { level: 1 })).toBeVisible();
-    const related = main(page).locator('section, div').filter({ has: page.getByText(design.blog.single.related, { exact: true }) }).last();
-    await expect(related, `The "${design.blog.single.related}" section should be shown`).toBeVisible();
-    await expect(related.getByRole('article')).toHaveCount(design.blog.single.relatedCount);
+    // Language-neutral: the label's translation is checked by the BBM2-74 test.
+    const relatedLinks = main(page).getByRole('link', { name: new RegExp(seed.showcase.related.map(t => t.replace(/[–-]/g, '.')).join('|')) })
+      .filter({ visible: true });
+    await expect(relatedLinks, `The design shows ${design.blog.single.relatedCount} related posts`).toHaveCount(design.blog.single.relatedCount);
+    await expect(main(page).getByRole('heading', { level: 2 }).last(), 'The related posts should have a section heading').toBeVisible();
   });
 
   test('[BBM2-65] Display blog post author and reading time (design)', async ({ page }) => {
@@ -140,13 +143,13 @@ test.describe('BBM2-65 Blog (design)', () => {
 
 test.describe('BBM2-74 Translations', () => {
   // Dutch blog labels that must not appear on the English store view (design copy: "8 min read", "Back to overview").
-  const dutch = /leestijd|Terug naar overzicht|Alle blogs en updates|\b(januari|februari|maart|mei|juni|juli|augustus|oktober)\b/i;
+  const dutch = /leestijd|Terug naar overzicht|Alle blogs en updates|Gerelateerd nieuws|\b(januari|februari|maart|mei|juni|juli|augustus|oktober)\b/i;
 
   test('[BBM2-74] Verify language packs and translated UI strings (blog, EN store view)', async ({ page }) => {
     await useEnglishStore(page);
     await expectLoaded(await page.goto(blog.overviewPath));
     expect.soft(await main(page).innerText(), 'Blog overview should have no Dutch labels').not.toMatch(dutch);
-    await main(page).getByRole('article').first().getByRole('link').first().click();
+    await expectLoaded(await page.goto(`/blog/${seed.showcase.urlKey}.html`));
     await expect(main(page).getByRole('heading', { level: 1 })).toBeVisible();
     expect(await main(page).innerText(), 'Blog post should have no Dutch labels').not.toMatch(dutch);
   });
