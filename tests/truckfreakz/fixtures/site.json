@@ -1,0 +1,57 @@
+{
+  "source": "TruckFreakz test suites TD-8, TD-10, TD-15, TD-24, TD-29 in E:/Codex/MB/TD; developer notes on the Jira tickets; observations from TST on 2026-10-06.",
+  "vatRate": 0.21,
+  "stores": {
+    "en": { "host": "com", "lang": "en", "language": "English", "brandPath": "truck-brand", "suitableFor": "Suitable for:", "inclVat": "incl. VAT",
+      "configurable": "/eyelids-for-headlights-scania-ngs.html",
+      "specLabels": ["Voltage", "Technology", "Light pattern", "Certification", "Water resistance", "Material", "Dimensions", "Mounting distance", "Application"] },
+    "nl": { "host": "be", "lang": "nl", "language": "Nederlands", "brandPath": "vrachtwagenmerk", "suitableFor": "Geschikt voor:", "inclVat": "incl. BTW",
+      "configurable": "/oogleden-voor-koplampen-scania-ngs.html",
+      "specLabels": ["Voltage", "Technologie", "Lichtbeeld", "Certificering", "Waterdichtheid", "Materiaal", "Afmetingen", "Montageafstand", "Toepassing"] },
+    "de": { "host": "de", "lang": "de", "language": "Deutsch", "brandPath": "truck-brand", "suitableFor": "Geeignet für:", "inclVat": "inkl. MwSt.",
+      "configurable": "/scheinwerferblenden-fur-scania-ngs.html",
+      "specLabels": ["Spannung", "Technologie", "Lichtbild", "Zertifizierung", "Wasserdichtheit", "Material", "Abmessungen", "Montageabstand", "Anwendung"] },
+    "fr": { "host": "fr", "lang": "fr", "language": "Francais", "brandPath": "truck-brand", "suitableFor": "Convient pour", "inclVat": "TVA incl.",
+      "configurable": "/paupieres-de-phares-pour-scania-ngs.html",
+      "specLabels": ["Tension", "Technologie", "Faisceau lumineux", "Certification", "Étanchéité", "Matériau", "Dimensions", "Distance de montage", "Application"] }
+  },
+  "truckBrands": ["Scania", "Daf", "Volvo", "Renault", "Iveco", "Mercedes", "Man"],
+  "configurable": {
+    "note": "Test configurable product created by development for TD-15 (Jira comment 2026-09-18).",
+    "sku": "2SCNGHLSP",
+    "label": "Best buy",
+    "suitableFor": ["Daf", "Renault", "Iveco"],
+    "variants": [
+      { "label": "red", "excl": 12, "image": "zwaailamp-rood" },
+      { "label": "green", "excl": 22, "image": "zwaailamp-geel" },
+      { "label": "blue", "excl": 33, "image": "zwaailamp-blauw" }
+    ]
+  },
+  "simple": {
+    "note": "Simple product without Product Label and without Suitable for values.",
+    "path": "/eyelids-scania-nextgen-type-3.html",
+    "sku": "TS7813472"
+  },
+  "specAttributes": ["voltage", "technology", "light_pattern", "certification", "water_resistance", "material", "dimensions", "mounting_distance", "application"],
+  "category": "/truck-interior.html",
+  "searchTerm": "scania",
+  "comingSoon": {
+    "path": "/errors/503.php",
+    "heading": "Coming very soon",
+    "launch": "1 November 2026",
+    "email": "info@truckfreakz.com"
+  },
+  "redesign": {
+    "note": "TD-24 copy agreed in the Jira comments of 2026-09-14 (Figma file jKfmFJ0jlE1u4i6wcaJnSQ is not exportable through the API).",
+    "communityTitle": "Real trucks. Real builds. Real freakz.",
+    "communityCta": "Show us your truck",
+    "footerLinks": ["About us", "Brands", "Contact", "Become a dealer", "Community"]
+  },
+  "viewports": {
+    "desktop1920": { "width": 1920, "height": 1080 },
+    "desktop1440": { "width": 1440, "height": 900 },
+    "desktop1366": { "width": 1366, "height": 786 },
+    "tablet": { "width": 768, "height": 1024 },
+    "mobile": { "width": 390, "height": 844 }
+  }
+}

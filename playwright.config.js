@@ -29,6 +29,14 @@ const clients = [
     storageState: '.auth/velder-customer.json',
   },
   {
+    name: 'truckfreakz',
+    baseURL: process.env.TRUCKFREAKZ_BASE_URL,
+    httpCredentials: process.env.TRUCKFREAKZ_HTTP_USER && {
+      username: process.env.TRUCKFREAKZ_HTTP_USER,
+      password: process.env.TRUCKFREAKZ_HTTP_PASSWORD,
+    },
+  },
+  {
     name: 'portofoonweb',
     baseURL: process.env.PORTOFOONWEB_BASE_URL,
     httpCredentials: process.env.PORTOFOONWEB_HTTP_USER && {
