@@ -2,6 +2,7 @@
   "overviewPath": "/blog.html",
   "overviewHeading": "Blog",
   "featuredPost": "Highlighted post",
+  "otherPost": "Post 1",
   "listHeading": "Alle blogs en updates",
   "backLink": "Terug naar overzicht",
   "postsPerPage": 12

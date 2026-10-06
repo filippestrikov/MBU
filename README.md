@@ -56,5 +56,8 @@ npm run test:ui
 npm run test:report
 ```
 
+`npm run test:cms` runs the opt-in tests that temporarily edit staging content in
+Magento Admin (and restore it). Run it on its own, never together with `npm test`.
+
 Failure screenshots and traces are saved in `test-results/`; the HTML report
 is saved in `playwright-report/`.

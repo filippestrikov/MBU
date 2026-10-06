@@ -38,9 +38,12 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: clients.filter(client => client.baseURL).map(({ name, baseURL, httpCredentials }) => ({
-    name,
-    testDir: `./tests/${name}`,
-    use: { ...devices['Desktop Chrome'], baseURL, httpCredentials: httpCredentials || undefined },
-  })),
+  projects: clients.filter(client => client.baseURL).flatMap(({ name, baseURL, httpCredentials }) => {
+    const use = { ...devices['Desktop Chrome'], baseURL, httpCredentials: httpCredentials || undefined };
+    return [
+      { name, testDir: `./tests/${name}`, testIgnore: '**/*.cms.spec.js', use },
+      // Tests that temporarily edit shared staging content run only on request (npm run test:cms).
+      ...(process.env.MBU_CMS_EDITS === '1' ? [{ name: `${name}-cms`, testDir: `./tests/${name}`, testMatch: '**/*.cms.spec.js', use }] : []),
+    ];
+  }),
 });

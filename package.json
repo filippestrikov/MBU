@@ -6,10 +6,12 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "test:cms": "cross-env MBU_CMS_EDITS=1 playwright test --project=*-cms --workers=1"
   },
   "devDependencies": {
     "@playwright/test": "1.55.1",
+    "cross-env": "7.0.3",
     "dotenv": "16.6.1"
   }
 }

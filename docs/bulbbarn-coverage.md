@@ -130,6 +130,36 @@ Local runs use 2 workers to limit load on the shared staging server.
 | BBM2-113 | Display PlatformSVS export information on order view | Pass (partial). Block present with "Not queued for PlatformSVS export yet."; attempts/supplier ID need an exported order. |
 | BBM2-74 | Verify EN, NL and DE store/language hierarchy | Pass. Admin Stores > All Stores lists NL, EN and DE store views. |
 
+### Opt-in admin content edits (`npm run test:cms`)
+
+These tests change shared staging content through Magento Admin and restore it, so they
+are **not** part of `npm test`. They run on one worker, never alongside the storefront
+suite. Each test reads the original content, saves a change marked `TEST Playwright`,
+checks the storefront, then restores the original in a `finally` block and verifies the
+stored content matches it. Page Builder's generated style ids and CRLF line endings
+(added by any admin save) are ignored in that comparison.
+
+CMS pages edited: "Delivery and Time [NL]" and "Find the solution to your question [NL]]"
+(the NL store view has its own pages). FAQ questions are stored in the
+`Bulbbarn\Theme\Block\Widget\FaqWidget` directive (`conditions_encoded`), not as HTML.
+
+Run 2026-10-06: 5 passed.
+
+| Ticket | Manual case | Notes |
+| --- | --- | --- |
+| BBM2-55 | Reflect backend changes to intro text on the subpage | Prefixes the intro; storefront shows it; restored. |
+| BBM2-55 | Reflect FAQ question changes made in the backend | Renames the first FaqWidget question. |
+| BBM2-55 | Remove deleted FAQ question from storefront | Removes the last FaqWidget entry. |
+| BBM2-56 | Reflect updates to main-page FAQ content | Renames the main-page question; checks the subpage FAQ is unchanged. |
+| BBM2-65 | Allow only one featured blog at a time | Marks "Post 1" featured; "Highlighted post" is unmarked automatically; restores. |
+
+Not automated: BBM2-65 "Allow client-editable Blog Overview text" — no editable overview
+text was found in the blog admin; needs the setting's location confirmed.
+
+The Magento REST API ("Claude" integration) is not usable yet: staging's nginx HTTP auth
+takes the `Authorization` header, so tokens never reach Magento. Exempting `/rest/` from
+HTTP auth (or allowlisting the test machine) would allow API-based setup and cleanup.
+
 ### Not automated yet: needs staging content or a design reference
 
 | Ticket | Manual case | What is needed |
@@ -149,5 +179,5 @@ Local runs use 2 workers to limit load on the shared staging server.
 
 - BBM2-55 / BBM2-56 / BBM2-65: cases that edit content in the admin and check the storefront (intro text, FAQ add/edit/delete, featured-post switch, overview text). These change staging data and need agreed admin test accounts.
 - BBM2-113 (PlatformSVS), BBM2-74 (integrations/translations), BBM2-75 (PDFs), BBM2-76 (Anowave GA4), BBM2-80 (product import): admin, queue, log or API checks.
-- Admin cases that **change** staging data (CMS text/FAQ edits, featured blog switch, configuration saves, retries/exports) are not automated: they would alter shared staging content. They can be added with an agreed revert step.
+- Configuration saves and PlatformSVS retries/exports are not automated (they change integration state).
 - PlatformSVS export/retry/status sync, inventory and product sync (BBM2-113), PDFs (BBM2-75), logs/CLI (BBM2-76, BBM2-80) need server or API access.
