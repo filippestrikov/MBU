@@ -27,7 +27,7 @@ only selected, never paid.
 
 ## Status (run 2026-10-06: 46 passed, 17 failed, 3 skipped)
 
-Full regression report for Jira: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md).
+Full regression report: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md), filed as Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5).
 
 Wishlist tests log in as the shared staging customer, add one product that is not yet
 on the wishlist and remove it again (from wishlist and cart) at the end. Admin tests
