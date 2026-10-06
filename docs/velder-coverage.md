@@ -23,7 +23,7 @@ makes a login take ~15 s — and stores the session in the Git-ignored `.auth/`)
 
 ## Status
 
-Run 2026-10-06: 31 tests – 19 passed, 11 failed, 1 skipped (V2-72, behaviour pending). Report: [regression-reports/velder-2026-10-06.md](regression-reports/velder-2026-10-06.md).
+Run 2026-10-06: 31 tests – 19 passed, 11 failed, 1 skipped (V2-72, behaviour pending). Report: [regression-reports/velder-2026-10-06.md](regression-reports/velder-2026-10-06.md), filed as Jira [V2-82](https://mbu-digital.atlassian.net/browse/V2-82). Team summary on Confluence: [02. Velder - Playwright Test Automation](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/318013442/02.+Velder+-+Playwright+Test+Automation).
 
 ### Findings
 
