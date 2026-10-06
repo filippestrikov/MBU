@@ -1,0 +1,29 @@
+{
+  "product": {
+    "path": "/dahlia-rancho-260082.html",
+    "name": "Dahlia 'Rancho'",
+    "options": { "1 tuber": "€ 4,95", "3 tubers": "€ 14,85" }
+  },
+  "category": "/tulips.html",
+  "searchTerm": "dahlia",
+  "addedMessage": "toegevoegd aan je winkelwagen",
+  "testOrder": {
+    "label": "TEST – Playwright automated order. Do not ship.",
+    "email": "playwright-test@example.com",
+    "firstname": "TEST",
+    "lastname": "Playwright",
+    "telephone": "0612345678",
+    "street": "Teststraat 1",
+    "postcode": "1012 AB",
+    "city": "Amsterdam"
+  },
+  "mollieMethods": {
+    "mollie_methods_bancontact": "Bancontact",
+    "mollie_methods_belfius": "Belfius",
+    "mollie_methods_creditcard": "Credit Cards",
+    "mollie_methods_ideal": "iDeal",
+    "mollie_methods_klarna": "Pay with Klarna.",
+    "mollie_methods_paypal": "PayPal"
+  },
+  "successMessage": "We hebben je bestelling ontvangen!"
+}

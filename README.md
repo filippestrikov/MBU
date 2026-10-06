@@ -35,9 +35,15 @@ BULBBARN_HTTP_USER=
 BULBBARN_HTTP_PASSWORD=
 BULBBARN_CUSTOMER_EMAIL=
 BULBBARN_CUSTOMER_PASSWORD=
+BULBBARN_ADMIN_URL=
+BULBBARN_ADMIN_USER=
+BULBBARN_ADMIN_PASSWORD=
 ```
 
 Values come from the MBU access sheet. Never commit credentials.
+
+Checkout tests place real orders on **staging only**, marked "TEST Playwright"
+with a "TEST – Playwright" order note and paid by Check / Money order.
 A client without a base URL in `.env` is skipped.
 
 ## Run

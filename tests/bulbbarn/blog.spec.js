@@ -1,4 +1,4 @@
-﻿const { test, expect } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 const content = require('./fixtures/blog.json');
 
 const listSection = page => page.locator('section')

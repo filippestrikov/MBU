@@ -13,7 +13,44 @@ copy; update them only when the expected content is confirmed.
 
 Run with `npx playwright test --project=bulbbarn`.
 
-## Status (first run 2026-10-06: 18 passed, 5 failed, 2 skipped)
+## Test orders
+
+Checkout tests place **real orders on staging only** (never on live). Every order is
+marked so it can be found and cleaned up in Magento:
+
+- customer name `TEST Playwright`, email `playwright-test@example.com`
+- order note (`Extra informatie`): `TEST – Playwright automated order. Do not ship.`
+- payment method `Check / Money order` (offline, no Mollie transaction)
+
+A full run places 3 orders (BBM2-73 MyParcel, BBM2-74, BBM2-76). Mollie methods are
+only selected, never paid.
+
+## Status (run 2026-10-06: 40 passed, 16 failed, 2 skipped)
+
+Local runs use 2 workers to limit load on the shared staging server.
+
+### Staging findings
+
+| # | Finding | Tests |
+| --- | --- | --- |
+| 1 | All Customer Service subject blocks link to `/delivery-and-time`. | BBM2-56, BBM2-55 |
+| 2 | "Volg je bestelling" subject block appears 5 times. | BBM2-56 |
+| 3 | Blog "Terug naar overzicht" links to `/blog/`, which returns 403 Forbidden. | BBM2-65 |
+| 4 | Blog overview has 4px horizontal overflow at 1440px. | BBM2-65 |
+| 5 | iDEAL payment option still shows the legacy iDEAL logo/label; no Wero branding. | BBM2-69 |
+| 6 | Sort By ("Sorteer op") reloads the whole page (`?product_list_order=`). | BBM2-73 |
+| 7 | Selecting a colour swatch in the standard filter does not update the product list (only a count request is sent). | BBM2-73 |
+| 8 | "Apply Filters" in All filters reloads the whole page (`?color=`). | BBM2-73 |
+| 9 | Adding to cart on the PDP shows the "toegevoegd" message and does not open the minicart. | BBM2-73 |
+| 10 | "Toevoegen aan winkelwagen" on minicart upsell products does not add the product. | BBM2-73 |
+| 11 | Mobile (412px) All-filters pop-up is 9px wider than the screen. | BBM2-85 |
+| 12 | Mobile category page has 20px horizontal overflow. | BBM2-85 |
+| 13 | No Trustpilot block on the homepage. | BBM2-85 |
+| 14 | Minicart quantity accepts 0. | BBM2-85 |
+| 15 | Intermittent: after several checkouts in a row MyParcel returns no delivery time slots (even after reload) and checkout stops with "The shipping method is missing". The affected test varies per run. | BBM2-69 / BBM2-73 checkout tests |
+
+Also noticed (not asserted): the mobile hamburger button is labelled "Menu sluiten"
+while the menu is closed, and the account-create page's submit button reads "Log in".
 
 ### Implemented
 
@@ -44,6 +81,38 @@ Run with `npx playwright test --project=bulbbarn`.
 | BBM2-65 | Paginate Blog Overview like category pages | Skipped: staging has fewer than 13 posts. |
 | BBM2-65 | Render Blog Overview responsively | **Fails**: 4px horizontal overflow at 1440px; 768px and 375px pass. |
 | BBM2-65 | Return to Blog Overview from bottom button | **Fails**: "Terug naar overzicht" links to `/blog/`, which returns 403 Forbidden. |
+| BBM2-69 | Display Ideal-WERO logo instead of legacy iDEAL logo | **Fails** (finding 5). Checks the iDEAL option's accessible name for Wero branding; artwork needs a visual check. |
+| BBM2-69 | Render Ideal-WERO logo correctly on desktop (1366x786, 1920x1024) | Pass (two tests). Logo visible, ≥24px, inside its option, not overlapping the label. |
+| BBM2-69 | Render Ideal-WERO logo correctly on mobile | Pass (390x844). |
+| BBM2-69 | Render Ideal-WERO logo correctly on tablet | Pass (820x1180). |
+| BBM2-69 | Keep payment option functional after logo replacement | Pass when MyParcel returns slots (finding 15). Selects iDEAL; Place Order enabled; no errors. Does not pay. |
+| BBM2-73 | Show notifications promptly and clear them correctly | Pass. The add-to-cart message does not persist on the next page. |
+| BBM2-73 | Display required product information in search results | Pass. Image, name and price on the first 6 cards. |
+| BBM2-73 | Apply Sort By without full-page reload | **Fails** (finding 6). |
+| BBM2-73 | Apply standard filters without full-page reload | **Fails** (finding 7). |
+| BBM2-73 | Apply filters from All filters without full-page reload | **Fails** (finding 8). |
+| BBM2-73 | Open minicart instead of showing add-to-cart notification on PDP | **Fails** (finding 9). |
+| BBM2-73 | Keep minicart open when adding an upsell product | **Fails** (finding 10). |
+| BBM2-73 | Verify Mollie payment integration in checkout | Pass. Bancontact, Belfius, Credit Cards, iDeal, Klarna, PayPal offered and selectable. |
+| BBM2-73 | Verify MyParcel shipping integration in checkout | Pass. Places a labelled test order. |
+| BBM2-74 | Verify Mollie payment methods on staging | Pass (same checks as BBM2-73). |
+| BBM2-74 | Verify MyParcel shipping methods and checkout compatibility | Pass. Home delivery and PostNL pickup offered; places a labelled test order. |
+| BBM2-76 | Place order successfully after MyParcel serialization fix | Pass. Places a labelled test order; Admin check not automated yet. |
+| BBM2-85 | Show correct account links on Sign In / Sign Up screens | Pass (Pixel 7 viewport, as all BBM2-85 tests). |
+| BBM2-85 | Update mobile menu according to login status | Pass. Uses the staging customer account from `.env`. |
+| BBM2-85 | Open Shopping Cart from mobile cart button | Pass. |
+| BBM2-85 | Display filters pop-up correctly on mobile PLP | **Fails** (finding 11). |
+| BBM2-85 | Use QTY selector correctly on PDP and Cart | Pass. |
+| BBM2-85 | Display product prices and names on search results | Pass. |
+| BBM2-85 | Display product cards correctly on mobile PLP | **Fails** (finding 12). |
+| BBM2-85 | Allow cart to contain more than 10 products when business rules permit | Pass (quantity 11 on one line). |
+| BBM2-85 | Display required homepage icons and CMS/Trustpilot blocks | **Fails** (finding 13). |
+| BBM2-85 | Display Blog Post page correctly on mobile | Pass. |
+| BBM2-85 | Display Planting Calendar correctly on PDP | Pass. |
+| BBM2-85 | Display language switcher correctly in footer | Pass. Opens "Taal" and switches to English. |
+| BBM2-85 | Display product options when adding configurable/custom-option items | Pass ("3 tubers" shown in cart). |
+| BBM2-85 | Calculate quantity, price and tax correctly after option changes | Pass (2 × € 14,85 = € 29,70; VAT line shown). |
+| BBM2-85 | Prevent invalid minicart quantity/removal behavior | **Fails** (finding 14). Removing the last item works. |
 
 ### Not automated yet: needs staging content or a design reference
 
@@ -64,4 +133,5 @@ Run with `npx playwright test --project=bulbbarn`.
 
 - BBM2-55 / BBM2-56 / BBM2-65: cases that edit content in the admin and check the storefront (intro text, FAQ add/edit/delete, featured-post switch, overview text). These change staging data and need agreed admin test accounts.
 - BBM2-113 (PlatformSVS), BBM2-74 (integrations/translations), BBM2-75 (PDFs), BBM2-76 (Anowave GA4), BBM2-80 (product import): admin, queue, log or API checks.
-- BBM2-69, BBM2-73, BBM2-85: storefront cart, checkout, filters, minicart and mobile cases. These are good next candidates; checkout cases must stop before placing an order unless order placement on staging is approved.
+- BBM2-73 MyParcel order placement in Admin, BBM2-76 Admin order check, BBM2-74 admin/config cases: can use the staging admin login in `.env` (`BULBBARN_ADMIN_*`).
+- BBM2-85 not yet automated: wishlist highlighting and add-from-wishlist (need a customer wishlist fixture), original/current price (needs a discounted product), sticky total overlap and footer scroll stability (visual).
