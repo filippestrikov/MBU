@@ -35,7 +35,7 @@ it is needed for manual testing.
 
 ## Status (run 2026-10-06: 39 tests – 29 passed, 6 failed, 4 skipped)
 
-Regression report: [regression-reports/parfumdeo-2026-10-06.md](regression-reports/parfumdeo-2026-10-06.md).
+Regression report: [regression-reports/parfumdeo-2026-10-06.md](regression-reports/parfumdeo-2026-10-06.md), filed as Jira [PDI-145](https://mbu-digital.atlassian.net/browse/PDI-145). Team summary on Confluence: [02. ParfumDeo - Playwright Test Automation](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317194244/02.+ParfumDeo+-+Playwright+Test+Automation).
 
 ### Findings (all failing tests)
 

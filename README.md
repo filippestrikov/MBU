@@ -16,7 +16,7 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | Client | Project | Coverage |
 | --- | --- | --- |
 | BulbBarn | `bulbbarn` | [BulbBarn coverage](docs/bulbbarn-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation) · Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5) |
-| ParfumDeo | `parfumdeo` | [ParfumDeo coverage](docs/parfumdeo-coverage.md) |
+| ParfumDeo | `parfumdeo` | [ParfumDeo coverage](docs/parfumdeo-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317194244/02.+ParfumDeo+-+Playwright+Test+Automation) · Jira [PDI-145](https://mbu-digital.atlassian.net/browse/PDI-145) |
 | Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation) — blocked by Cloudflare bot verification on TST |
 
 ## Setup
