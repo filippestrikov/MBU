@@ -16,7 +16,8 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | Client | Project | Coverage |
 | --- | --- | --- |
 | BulbBarn | `bulbbarn` | [BulbBarn coverage](docs/bulbbarn-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation) · Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5) |
-| Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) — blocked by Cloudflare bot verification on TST |
+| ParfumDeo | `parfumdeo` | [ParfumDeo coverage](docs/parfumdeo-coverage.md) |
+| Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation) — blocked by Cloudflare bot verification on TST |
 
 ## Setup
 
@@ -39,6 +40,15 @@ BULBBARN_CUSTOMER_PASSWORD=
 BULBBARN_ADMIN_URL=
 BULBBARN_ADMIN_USER=
 BULBBARN_ADMIN_PASSWORD=
+
+PARFUMDEO_BASE_URL=https://dev-parfumdeo-nl.mbu.dev/
+PARFUMDEO_HTTP_USER=
+PARFUMDEO_HTTP_PASSWORD=
+PARFUMDEO_CUSTOMER_EMAIL=
+PARFUMDEO_CUSTOMER_PASSWORD=
+PARFUMDEO_ADMIN_URL=
+PARFUMDEO_ADMIN_USER=
+PARFUMDEO_ADMIN_PASSWORD=
 
 PORTOFOONWEB_BASE_URL=https://tst-portofoonweb-nl.mbu.dev/
 PORTOFOONWEB_HTTP_USER=

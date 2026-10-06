@@ -12,6 +12,14 @@ const clients = [
     },
   },
   {
+    name: 'parfumdeo',
+    baseURL: process.env.PARFUMDEO_BASE_URL,
+    httpCredentials: process.env.PARFUMDEO_HTTP_USER && {
+      username: process.env.PARFUMDEO_HTTP_USER,
+      password: process.env.PARFUMDEO_HTTP_PASSWORD,
+    },
+  },
+  {
     name: 'portofoonweb',
     baseURL: process.env.PORTOFOONWEB_BASE_URL,
     httpCredentials: process.env.PORTOFOONWEB_HTTP_USER && {

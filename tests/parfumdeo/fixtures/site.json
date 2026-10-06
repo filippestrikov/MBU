@@ -1,0 +1,50 @@
+{
+  "source": "Expected copy and behaviour from the ParfumDeo Confluence feature pages (space MBUCD), read 2026-10-06.",
+  "product": {
+    "path": "/85715806437-dunhill-icon-racing-for-men-edp-sample-2-ml.html",
+    "name": "DUNHILL ICON RACING FOR MEN EDP (SAMPLE) 2 ML",
+    "note": "Chosen for high dev stock (571 on 2026-10-06); test orders consume stock."
+  },
+  "category": "/beauty/parfum.html",
+  "searchTerm": "parfum",
+  "copy": {
+    "noSearchResults": "Je zoekopdracht heeft geen resultaten opgeleverd.",
+    "orderButton": "Kopen & afrekenen",
+    "passwordResetMessage": "Als er een account is gekoppeld aan dit e-mailadres, ontvang je een e-mail met een link om je wachtwoord opnieuw in te stellen.",
+    "failedPayment": "Transactie mislukt. Controleer je factuurgegevens en betaalmethode, en probeer het opnieuw.",
+    "requiredField": "Dit is een verplicht veld.",
+    "outOfStock": "is momenteel niet op voorraad",
+    "notFoundTitle": "Pagina niet gevonden",
+    "shoppingAssistance": "Klantenservice hulp op afstand toestaan",
+    "giftCardEmpty": "Je hebt nog geen opgeslagen cadeaubon.",
+    "sources": {
+      "PDI-56": "Magento 2 | PDI-56 - Dutch translations & transactional email texts",
+      "PDI-41": "Magento 2 | PDI-41 - Checkout (Hyvä Checkout, addresses & postcode checker)",
+      "PDI-122": "Magento 2 | PDI-122 - Gift cards (Mageplaza) & payment selection",
+      "PDI-23": "Magento 2 | PDI-23 - Layered navigation & SEO filter URLs (Mirasvit)",
+      "PDI-68": "Magento 2 | PDI-68 - Shipping methods (Trunkrs) & expected shipping date",
+      "PDI-58": "Magento 2 | PDI-58 - Mollie payments, failed payments & stock restore"
+    }
+  },
+  "shipping": {
+    "firstMethod": "Trunkrs avond 17:00-22:30",
+    "firstPrice": "€ 5,95",
+    "expectedCarriers": [
+      "Trunkrs",
+      "PostNL",
+      "DHL",
+      "DPD"
+    ]
+  },
+  "testOrder": {
+    "label": "TEST – Playwright automated order. Do not ship.",
+    "email": "playwright-test@example.com",
+    "firstname": "TEST",
+    "lastname": "Playwright",
+    "street": "Teststraat",
+    "houseNumber": "1",
+    "postcode": "1012 AB",
+    "city": "Amsterdam",
+    "telephone": "0612345678"
+  }
+}

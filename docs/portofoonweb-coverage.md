@@ -6,6 +6,8 @@ Target: Portofoonweb **TST** only (`PORTOFOONWEB_BASE_URL` = `https://tst-portof
 HTTP auth). Live sites are never tested. The access sheet notes the customer and admin
 accounts are the same as on PRD, so they are real accounts: use them on TST only.
 
+Team summary on Confluence: [02. PortofoonWEB - Playwright Test Automation](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation).
+
 ## Status (2026-10-06): blocked
 
 Cloudflare (with Hypernode Botstopper) in front of TST blocks the automated browser:
