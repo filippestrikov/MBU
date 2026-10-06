@@ -11,6 +11,14 @@ const clients = [
       password: process.env.BULBBARN_HTTP_PASSWORD,
     },
   },
+  {
+    name: 'portofoonweb',
+    baseURL: process.env.PORTOFOONWEB_BASE_URL,
+    httpCredentials: process.env.PORTOFOONWEB_HTTP_USER && {
+      username: process.env.PORTOFOONWEB_HTTP_USER,
+      password: process.env.PORTOFOONWEB_HTTP_PASSWORD,
+    },
+  },
 ];
 
 // Live sites must never be tested: only staging/test/dev hosts are allowed.

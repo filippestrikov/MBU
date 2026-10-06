@@ -16,6 +16,7 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | Client | Project | Coverage |
 | --- | --- | --- |
 | BulbBarn | `bulbbarn` | [BulbBarn coverage](docs/bulbbarn-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation) · Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5) |
+| Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) — blocked by Cloudflare bot verification on TST |
 
 ## Setup
 
@@ -38,6 +39,15 @@ BULBBARN_CUSTOMER_PASSWORD=
 BULBBARN_ADMIN_URL=
 BULBBARN_ADMIN_USER=
 BULBBARN_ADMIN_PASSWORD=
+
+PORTOFOONWEB_BASE_URL=https://tst-portofoonweb-nl.mbu.dev/
+PORTOFOONWEB_HTTP_USER=
+PORTOFOONWEB_HTTP_PASSWORD=
+PORTOFOONWEB_CUSTOMER_EMAIL=
+PORTOFOONWEB_CUSTOMER_PASSWORD=
+PORTOFOONWEB_ADMIN_URL=
+PORTOFOONWEB_ADMIN_USER=
+PORTOFOONWEB_ADMIN_PASSWORD=
 ```
 
 Values come from the MBU access sheet. Never commit credentials.
