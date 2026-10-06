@@ -1,0 +1,24 @@
+{
+  "mainPath": "/find-the-solution-to-your-question",
+  "mainHeading": "Vind het antwoord op uw vraag",
+  "footerLabel": "Klantenservice",
+  "subjectNavigation": "Snelle links",
+  "subjects": [
+    { "name": "Volg je bestelling" },
+    { "name": "Levering en tijd" },
+    { "name": "Retourneren en annuleren" },
+    { "name": "Bestelling en betalingen" }
+  ],
+  "faqHeading": "Veelgestelde vragen",
+  "mainFaq": ["Wanneer komt mijn bestelling aan?"],
+  "subpages": {
+    "Levering en tijd": {
+      "path": "/delivery-and-time",
+      "faq": [
+        "Wanneer komt mijn bestelling aan?",
+        "Ik heb mijn bestelling niet ontvangen.",
+        "Ik ben niet thuis wanneer mijn pakket aankomt; wat nu?"
+      ]
+    }
+  }
+}
