@@ -17,6 +17,7 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | --- | --- | --- |
 | BulbBarn | `bulbbarn` | [BulbBarn coverage](docs/bulbbarn-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation) · Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5) |
 | ParfumDeo | `parfumdeo` | [ParfumDeo coverage](docs/parfumdeo-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317194244/02.+ParfumDeo+-+Playwright+Test+Automation) · Jira [PDI-145](https://mbu-digital.atlassian.net/browse/PDI-145) |
+| Velder | `velder` | [Velder coverage](docs/velder-coverage.md) |
 | Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation) — blocked by Cloudflare bot verification on TST |
 
 ## Setup
@@ -49,6 +50,15 @@ PARFUMDEO_CUSTOMER_PASSWORD=
 PARFUMDEO_ADMIN_URL=
 PARFUMDEO_ADMIN_USER=
 PARFUMDEO_ADMIN_PASSWORD=
+
+VELDER_BASE_URL=https://tst-bestellen-velder-com.mbu.dev/
+VELDER_HTTP_USER=
+VELDER_HTTP_PASSWORD=
+VELDER_CUSTOMER_EMAIL=
+VELDER_CUSTOMER_PASSWORD=
+VELDER_ADMIN_URL=
+VELDER_ADMIN_USER=
+VELDER_ADMIN_PASSWORD=
 
 PORTOFOONWEB_BASE_URL=https://tst-portofoonweb-nl.mbu.dev/
 PORTOFOONWEB_HTTP_USER=

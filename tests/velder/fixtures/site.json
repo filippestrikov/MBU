@@ -1,0 +1,14 @@
+{
+  "source": "Velder test suites in E:/Codex/MB/Velder and E:/Codex/MB/V2; observations from TST on 2026-10-06.",
+  "storageState": ".auth/velder-customer.json",
+  "loginFooterLinks": ["Cookies settings", "Privacy statement", "Cookie statement"],
+  "invalidLogin": { "email": "playwright-invalid@example.com", "password": "123456" },
+  "priceUnitProduct": { "sku": "188843", "name": "GRAT-FOL40+ MOZZARELLA 2K", "expectedUnit": "collo" },
+  "testOrder": { "reference": "TEST Playwright", "note": "The checkout reference field allows 30 characters." },
+  "viewports": {
+    "desktop1366": { "width": 1366, "height": 786 },
+    "desktop1920": { "width": 1920, "height": 1024 },
+    "ipadMini": { "width": 768, "height": 1024 },
+    "iphone13": { "width": 390, "height": 844 }
+  }
+}

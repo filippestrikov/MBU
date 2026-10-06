@@ -20,6 +20,15 @@ const clients = [
     },
   },
   {
+    name: 'velder',
+    baseURL: process.env.VELDER_BASE_URL,
+    httpCredentials: process.env.VELDER_HTTP_USER && {
+      username: process.env.VELDER_HTTP_USER,
+      password: process.env.VELDER_HTTP_PASSWORD,
+    },
+    storageState: '.auth/velder-customer.json',
+  },
+  {
     name: 'portofoonweb',
     baseURL: process.env.PORTOFOONWEB_BASE_URL,
     httpCredentials: process.env.PORTOFOONWEB_HTTP_USER && {
@@ -54,8 +63,15 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: clients.filter(client => client.baseURL).flatMap(({ name, baseURL, httpCredentials }) => {
+  projects: clients.filter(client => client.baseURL).flatMap(({ name, baseURL, httpCredentials, storageState }) => {
     const use = { ...devices['Desktop Chrome'], baseURL, httpCredentials: httpCredentials || undefined };
+    // Clients with a login wall log in once in a setup project and reuse the stored session.
+    if (storageState) {
+      return [
+        { name: `${name}-setup`, testDir: `./tests/${name}`, testMatch: '**/auth.setup.js', use },
+        { name, testDir: `./tests/${name}`, testIgnore: ['**/*.cms.spec.js', '**/auth.setup.js'], dependencies: [`${name}-setup`], use: { ...use, storageState } },
+      ];
+    }
     return [
       { name, testDir: `./tests/${name}`, testIgnore: '**/*.cms.spec.js', use },
       // Tests that temporarily edit shared staging content run only on request (npm run test:cms).
