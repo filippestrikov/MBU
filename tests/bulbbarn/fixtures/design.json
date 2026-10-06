@@ -1,0 +1,37 @@
+{
+  "source": "Figma file FRBjxTOxDLmoKYZrrYkUFG 'Bulbbarn - Webshop - Hyvä', read 2026-10-06 (last modified 2026-10-06T10:24:17Z). Copy is English, so text checks run on the EN store view.",
+  "englishStore": "/stores/store/redirect/___store/en_GB/___from_store/nl_NL/",
+  "customerServiceMain": {
+    "frames": { "desktop": "3248:1010", "mobile": "3248:6315" },
+    "heroIntro": "Hi there! How can we help?",
+    "heading": "Find the solution to your question",
+    "supportHeading": "Customer support",
+    "supportIcons": 3,
+    "subjects": [
+      "Track your order", "Company details", "Delivery and Time", "Warranty",
+      "Returns & Cancellations", "Account details", "Order and payments", "Contact us"
+    ]
+  },
+  "customerCareSub": { "frames": { "desktop": "1735:10384", "mobile": "1166:15482" } },
+  "contactBlock": [
+    "Have a question?", "Contact us!", "Our team will respond in 24-48 hours", "Start chat",
+    "Need direct help?", "Call now"
+  ],
+  "reviewsBlock": ["They fell in love already", "Join the family"],
+  "blog": {
+    "frames": { "overview": "3613:993", "single": "3613:1219" },
+    "overviewIntro": "Looking to dig a little deeper into the world of bulbs and blooms?",
+    "postsPerPage": 12,
+    "single": { "author": "Planted by:", "back": "Back to overview", "related": "Relatable news", "relatedCount": 3 }
+  },
+  "mobileSticky": {
+    "frames": { "cart": "1560:1814", "checkout": "1308:16864", "minicart": "1166:15215" },
+    "cart": "Totaal",
+    "checkout": "Overzicht bestelling"
+  },
+  "favicon": { "frame": "3602:56", "file": "design/favicon-figma.png" },
+  "notes": {
+    "idealWero": "Figma 'Payment labels' (2855:777) only has the legacy iDEAL logo; the Wero requirement comes from ticket BBM2-69.",
+    "createAccountButton": "Figma 'Account (Create)' (1311:21906) labels the submit button 'Login', matching staging's 'Log in'."
+  }
+}

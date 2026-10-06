@@ -3,6 +3,8 @@ const {
   shop, cartButton, cartDrawer, cartCount, expectLoaded, addProduct, chooseFirstOption, cartTotal, cartSubtotal, horizontalOverflow,
 } = require('./shop');
 
+const design = require('./fixtures/design.json');
+
 const { defaultBrowserType, ...pixel } = devices['Pixel 7'];
 test.use(pixel);
 
@@ -260,16 +262,31 @@ test.describe('BBM2-85 Feedback mobile', () => {
     await expect(page.getByRole('main').getByRole('article').filter({ hasText: sale.name }).first()).toContainText(sale.currentPrice);
   });
 
-  test('[BBM2-85] Keep sticky total usable and non-overlapping', async ({ page }) => {
-    await addProduct(page);
-    await expectLoaded(await page.goto('/checkout/cart/'));
-    const sticky = await page.evaluate(() => [...document.querySelectorAll('body *')].some(el => {
-      const style = getComputedStyle(el);
-      const box = el.getBoundingClientRect();
-      return ['fixed', 'sticky'].includes(style.position) && box.width > 0 && box.bottom > 0 && box.top < innerHeight && /Totaal/.test(el.innerText);
-    }));
-    test.skip(!sticky, 'No sticky total is rendered on the mobile cart; needs the approved design to confirm it should exist.');
-  });
+  // Figma mobile Cart (1560:1814) pins the totals; Checkout step 1 (1308:16864) pins "Overzicht bestelling".
+  for (const [where, path, label] of [
+    ['cart', '/checkout/cart/', design.mobileSticky.cart],
+    ['checkout', '/checkout/', design.mobileSticky.checkout],
+  ]) {
+    test(`[BBM2-85] Keep sticky total usable and non-overlapping (${where})`, async ({ page }) => {
+      await addProduct(page);
+      await expectLoaded(await page.goto(path));
+      await page.mouse.wheel(0, 400);
+      // A pinned element in the bottom half of the screen that shows the total/overview.
+      const sticky = () => page.evaluate(text => [...document.querySelectorAll('body *')].find(el => {
+        const style = getComputedStyle(el);
+        const box = el.getBoundingClientRect();
+        return ['fixed', 'sticky'].includes(style.position) && box.height > 0 && box.top > innerHeight / 2
+          && box.bottom <= innerHeight + 1 && el.innerText.includes(text);
+      })?.getBoundingClientRect().toJSON() ?? null, label);
+      await expect.poll(sticky, { message: `The design pins "${label}" to the bottom of the ${where} screen` }).not.toBeNull();
+      // Fields must stay reachable: the focused field may not sit underneath the pinned bar.
+      const bar = await sticky();
+      const field = page.getByRole('main').getByRole('textbox').or(page.getByRole('main').getByRole('spinbutton')).last();
+      await field.focus();
+      const box = await field.boundingBox();
+      expect(box.y + box.height <= bar.top + 1 || box.y >= bar.bottom - 1, 'The focused field should not be covered by the sticky bar').toBe(true);
+    });
+  }
 
   test('[BBM2-85] Keep footer scrolling stable on mobile', async ({ page }) => {
     await expectLoaded(await page.goto('/'));

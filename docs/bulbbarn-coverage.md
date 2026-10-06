@@ -25,7 +25,7 @@ marked so it can be found and cleaned up in Magento:
 A full run places 3 orders (BBM2-73 MyParcel, BBM2-74, BBM2-76). Mollie methods are
 only selected, never paid.
 
-## Status (run 2026-10-06: 46 passed, 17 failed, 3 skipped)
+## Status (run 2026-10-06: 80 tests – 49 passed, 29 failed, 2 skipped)
 
 Full regression report: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md), filed as Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5).
 
@@ -123,7 +123,7 @@ Local runs use 2 workers to limit load on the shared staging server.
 | BBM2-85 | Highlight wishlisted products correctly on mobile | Pass. Wishlists a new product, checks the highlighted heart on the category page, then removes it. |
 | BBM2-85 | Add product to cart from Wishlist on mobile | Pass. Uses the options pop-up; cleans up cart and wishlist. |
 | BBM2-85 | Display correct original and current prices on mobile | **Fails** (findings 18 and 19). Uses `/test-product.html` (the only sale product found). |
-| BBM2-85 | Keep sticky total usable and non-overlapping | Skipped: no sticky total is rendered on the mobile cart; needs the design to confirm it should exist. |
+| BBM2-85 | Keep sticky total usable and non-overlapping (cart, checkout) | **Fails**: no pinned total; Figma pins it (report #27). |
 | BBM2-85 | Keep footer scrolling stable on mobile | Pass. Wheel scrolling around the footer moves in the requested direction without jumps; no scroll lock. |
 | BBM2-76 | Place order successfully after MyParcel serialization fix (Admin part) | Pass. Admin order view shows TEST customer, address, MyParcel shipping, delivery date and the test note. |
 | BBM2-113 | Display PlatformSVS status in Sales Order grid | Pass. "PlatformSVS Export" column shows a valid status for TEST orders (all "NOT EXPORTED"). |
@@ -159,6 +159,33 @@ text was found in the blog admin; needs the setting's location confirmed.
 The Magento REST API ("Claude" integration) is not usable yet: staging's nginx HTTP auth
 takes the `Authorization` header, so tokens never reach Magento. Exempting `/rest/` from
 HTTP auth (or allowlisting the test machine) would allow API-based setup and cleanup.
+
+### Design checks (`tests/bulbbarn/design.spec.js`)
+
+Expectations come from the Figma file "Bulbbarn - Webshop - Hyvä" and are stored in
+`tests/bulbbarn/fixtures/design.json` with the frame id of each source, so tests do not call
+Figma at run time. Design copy is English, so text checks use the EN store view.
+`FIGMA_TOKEN` in `.env` is only needed to refresh the fixture.
+
+| Ticket | Check | Result |
+| --- | --- | --- |
+| BBM2-56 | Customer support block in the hero (3 icons) | **Fails**: 2 icons (EN), missing on NL (report #20). |
+| BBM2-56 | Support icons open real destinations | **Fails**: `tel:` / `mailto:` without number/address (#20). |
+| BBM2-56 | Main-page structure vs design (8 subjects, FAQ, contact, reviews) | **Fails**: 4 distinct subjects + duplicates; no reviews (#21, #22). |
+| BBM2-55 | Static contact block (EN) | Pass. |
+| BBM2-55 | Static contact block (NL) | **Fails**: missing on NL (#23). |
+| BBM2-55 | Contact block unchanged across pages | Pass (main page vs Delivery and Time; only one real subpage exists). |
+| BBM2-55 | Reviews component | **Fails**: missing (#22). |
+| BBM2-55 | Sections in designed order | **Fails**: reviews missing (#22). |
+| BBM2-65 | Overview intro text from the design | **Fails** (#24). |
+| BBM2-65 | Three related blogs ("Relatable news") | **Fails** (#25). |
+| BBM2-65 | Author "Planted by" and reading time | **Fails** (#25). |
+| BBM2-74 | No Dutch labels on the EN blog | **Fails** (#26). |
+| BBM2-63 | Favicon matches the Figma artwork (pixel comparison) | Pass. |
+| BBM2-85 | Sticky total on mobile cart / checkout (now two tests, no longer skipped) | **Fails** (#27). |
+
+Design notes: the create-account button reads "Login" in Figma too (report #17 is a design
+question), and Figma has no iDEAL | Wero asset yet (#5).
 
 ### Not automated yet: needs staging content or a design reference
 
