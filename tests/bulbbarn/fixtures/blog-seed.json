@@ -105,6 +105,18 @@
         "TEST Playwright – Blog post 02",
         "TEST Playwright – Blog post 03"
       ]
+    },
+    {
+      "title": "TEST Playwright – Video post",
+      "urlKey": "test-playwright-video-post",
+      "shortContent": "<p>TEST Playwright video post: video as the first media.</p>",
+      "fullContent": "<div data-content-type=\"video\" data-appearance=\"default\" data-element=\"main\"><div data-element=\"inner\"><div data-element=\"wrapper\" class=\"pagebuilder-video-wrapper\"><div class=\"pagebuilder-video-container\"><iframe frameborder=\"0\" allowfullscreen=\"\" src=\"https://www.youtube.com/embed/2PuFyjAs7JA\" data-element=\"video\"></iframe></div></div></div></div>\n<p>TEST Playwright video post. The video above is the hero media.</p>"
     }
-  ]
+  ],
+  "video": {
+    "urlKey": "test-playwright-video-post",
+    "title": "TEST Playwright – Video post",
+    "youtubeId": "2PuFyjAs7JA",
+    "source": "https://www.youtube.com/watch?v=2PuFyjAs7JA"
+  }
 }

@@ -125,7 +125,34 @@ test.describe('BBM2-65 Blog single (seeded TEST content)', () => {
       .toHaveText(showcase.related.find(name => clicked.includes(name)) ?? clicked);
   });
 
-  test('[BBM2-65] Support video in blog hero media', async () => {
-    test.skip(true, 'Needs a hero video configuration on a staging post (video source and how the theme sets it are not confirmed).');
-  });
+  // The post form has no hero-video field, so the seeded post puts a Page Builder video block
+  // first in the body ("first media position"). It does not replace the post image.
+  for (const width of [1440, 390]) {
+    test(`[BBM2-65] Support video in blog hero media (${width}px)`, async ({ page }) => {
+      const video = seed.video;
+      await page.setViewportSize({ width, height: 900 });
+      await expectLoaded(await page.goto(`/blog/${video.urlKey}.html`));
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(video.title);
+      const frame = body(page).locator('iframe').first();
+      await frame.scrollIntoViewIfNeeded();
+      await expect(frame).toBeVisible();
+      await expect(frame).toHaveAttribute('src', new RegExp(`/embed/${video.youtubeId}`));
+      const layout = await body(page).evaluate(root => {
+        const iframe = root.querySelector('iframe');
+        const media = [...root.querySelectorAll('iframe, img, video')];
+        const text = [...root.querySelectorAll('p')].find(p => p.textContent.trim());
+        const box = iframe.getBoundingClientRect();
+        return {
+          firstMedia: media[0] === iframe,
+          ratio: box.width / box.height,
+          right: box.right,
+          beforeText: text ? box.bottom <= text.getBoundingClientRect().top + 1 : true,
+        };
+      });
+      expect(layout.firstMedia, 'The video should be the first media in the post').toBe(true);
+      expect(layout.ratio, 'The video should keep a 16:9 frame').toBeCloseTo(16 / 9, 1);
+      expect(layout.right, 'The video should fit the page').toBeLessThanOrEqual(width + 1);
+      expect(layout.beforeText, 'The video should not overlap the text below it').toBe(true);
+    });
+  }
 });

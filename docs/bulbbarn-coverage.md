@@ -25,7 +25,7 @@ marked so it can be found and cleaned up in Magento:
 A full run places 3 orders (BBM2-73 MyParcel, BBM2-74, BBM2-76). Mollie methods are
 only selected, never paid.
 
-## Status (run 2026-10-06: 84 tests – 55 passed, 28 failed, 1 skipped)
+## Status (2026-10-06: 85 tests – 57 passed, 28 failed, 0 skipped)
 
 Full regression report: [regression-reports/bulbbarn-2026-10-06.md](regression-reports/bulbbarn-2026-10-06.md), filed as Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5).
 
@@ -89,7 +89,7 @@ Local runs use 2 workers to limit load on the shared staging server.
 | BBM2-65 | Render H2 and H3 heading styles | Pass (seeded showcase post: H2 larger than H3). |
 | BBM2-65 | Display multiple images in a blog post | Pass (3 images load in order, fit the page). |
 | BBM2-65 | Display three client-selected related blogs at bottom (seeded post) | Pass (3 related posts shown and linked). |
-| BBM2-65 | Support video in blog hero media | Skipped: needs a video source and the way the theme sets a hero video. |
+| BBM2-65 | Support video in blog hero media (1440px, 390px) | Pass. Seeded "TEST Playwright – Video post" has a Page Builder video block (YouTube 2PuFyjAs7JA) first in the body; checks embed, first-media position, 16:9, fit and no overlap. The post form has no hero-video field, so the video does not replace the post image; confirm with developers if a true hero video is required. |
 | BBM2-65 | Render Blog Overview responsively | **Fails**: 4px horizontal overflow at 1440px; 768px and 375px pass. |
 | BBM2-65 | Return to Blog Overview from bottom button | **Fails**: "Terug naar overzicht" links to `/blog/`, which returns 403 Forbidden. |
 | BBM2-69 | Display Ideal-WERO logo instead of legacy iDEAL logo | **Fails** (finding 5). Checks the iDEAL option's accessible name for Wero branding; artwork needs a visual check. |
@@ -166,11 +166,11 @@ HTTP auth (or allowlisting the test machine) would allow API-based setup and cle
 
 ### Seeded TEST blog content (permanent, agreed 2026-10-06)
 
-`node scripts/seed-bulbbarn-blog.cjs` creates (or repairs) 14 posts titled "TEST Playwright – …"
-on staging through Magento Admin: 13 list posts and a "Content showcase" post with H2/H3
+`node scripts/seed-bulbbarn-blog.cjs` creates (or repairs) 15 posts titled "TEST Playwright – …"
+on staging through Magento Admin: 13 list posts, a "Video post" (YouTube video first in the body) and a "Content showcase" post with H2/H3
 headings, 3 images (existing product images) and 3 related posts, author Filip Pestrikov.
 It is idempotent (`--dry-run` lists, `--limit=N` creates at most N). The staging blog
-therefore shows 16 posts; "Highlighted post" stays featured. Definitions:
+therefore shows 17 posts; "Highlighted post" stays featured. Definitions:
 `tests/bulbbarn/fixtures/blog-seed.json`.
 
 ### Design checks (`tests/bulbbarn/design.spec.js`)
@@ -210,7 +210,6 @@ question), and Figma has no iDEAL | Wero asset yet (#5).
 | BBM2-55 | Keep contact block unchanged across subject subpages | Needs the contact block and a second real subpage. |
 | BBM2-55 | Display reviews component consistently with other pages | No reviews section is rendered. Needs the reference component. |
 | BBM2-55 | Display required page sections in the designed structure | Blocked by contact block and reviews. |
-| BBM2-65 | Support video in blog hero media | Needs a video source and how the theme shows a hero video (not a field in the post form). |
 
 ### Not automated: needs Magento admin changes, back-end access or real orders
 
