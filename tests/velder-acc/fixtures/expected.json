@@ -1,0 +1,41 @@
+{
+  "source": "Magento Product Integration Test Execution Guide (VDP), tables 'Expected Store-View Prices', 'Representative Attribute Checks', 'Expected Image Outcomes' and Appendix B; test data nlTestData.xml / enTestData.xml. Copied 2026-10-07.",
+  "stores": {
+    "nl_sv10": { "language": "nl", "priceGroup": "10", "customer": "filip+10@mbu.digital" },
+    "nl_sv20": { "language": "nl", "priceGroup": "20", "customer": "filip+20@mbu.digital" },
+    "nl_sv_pl_re": { "language": "nl", "priceGroup": "RE", "customer": "filip+re@mbu.digital" },
+    "en_sv28": { "language": "en", "priceGroup": "28", "customer": "filip+28@mbu.digital" },
+    "en_sv40": { "language": "en", "priceGroup": "40", "customer": "filip+40@mbu.digital" }
+  },
+  "skus": {
+    "21422142": { "action": "create", "fictional": true },
+    "21422000": { "action": "create", "fictional": true },
+    "100790": { "action": "update", "fictional": false }
+  },
+  "prices": {
+    "21422142": { "nl_sv10": 23.4, "nl_sv20": 21.2, "nl_sv_pl_re": 25.6, "en_sv28": 127, "en_sv40": 129 },
+    "21422000": { "nl_sv10": 13.4, "nl_sv20": 11.2, "nl_sv_pl_re": 15.6, "en_sv28": 117, "en_sv40": 119 },
+    "100790": { "nl_sv10": 3.4, "nl_sv20": 1.2, "nl_sv_pl_re": 5.6, "en_sv28": 107, "en_sv40": 109 }
+  },
+  "representativeOptions": {
+    "21422142": { "lov_biologisch": ["5510"], "lov_product_landvanherkomst": ["5556"], "allergenen": ["5553", "5552"] },
+    "21422000": { "lov_biologisch": ["5595"], "lov_europese_bescherming": ["5635"], "lov_typemelk": ["5645"], "allergenen": ["5524", "5537", "5532"] }
+  },
+  "images": {
+    "21422142": [
+      { "position": 2, "name": "prd2_100432_afbeelding_FIC1_F2_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 3, "name": "prd2_100432_extraafbeelding_FIC1_F3_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 4, "name": "prd2_100432_extraafbeelding_FIC1_F4_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 5, "name": "prd2_100432_extraafbeelding_FIC1_F5_wit_val_ja_intern_d_2_xv_2.jpg" }
+    ],
+    "21422000": [
+      { "position": 2, "name": "prd2_100466_afbeelding_FIC1_F2_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 3, "name": "prd2_100466_extraafbeelding_FIC1_F3_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 4, "name": "prd2_100466_extraafbeelding_FIC1_F4_wit_val_ja_intern_d_2_xv_2.jpg" },
+      { "position": 5, "name": "prd2_100466_extraafbeelding_FIC1_F5_wit_val_ja_intern_d_2_xv_2.jpg" }
+    ],
+    "100790": [
+      { "position": 2, "name": "prd_100790_afbeelding_FIC1_F2_wit_val_ja_intern_d_2_xv_2.jpg" }
+    ]
+  }
+}

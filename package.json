@@ -8,7 +8,9 @@
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report",
     "test:cms": "cross-env MBU_CMS_EDITS=1 playwright test --project=*-cms --workers=1",
-    "lint:tests": "node scripts/check-test-rules.cjs"
+    "lint:tests": "node scripts/check-test-rules.cjs",
+    "test:vdp": "cross-env MBU_VDP=1 playwright test --project=velder-acc",
+    "test:vdp:cleanup": "cross-env MBU_VDP=1 VDP_PHASE=cleanup playwright test --project=velder-acc --grep \"TC-000|TC-008\""
   },
   "devDependencies": {
     "@playwright/test": "1.55.1",

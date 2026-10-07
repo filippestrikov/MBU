@@ -39,11 +39,23 @@ const adminGrid = page => page.locator('[data-role="grid"]');
 const gridRows = page => adminGrid(page).getByRole('row')
   .filter({ has: page.getByRole('link', { name: /^(Edit|View|Bewerken|Bekijken)\b/, includeHidden: true }) });
 
+const gridSearchBox = page => page.getByRole('textbox', { name: /Search by keyword|Zoeken op trefwoord/i }).filter({ visible: true }).first();
+
+// Grid filters are saved per admin user and would silently hide rows from a keyword search.
+async function clearGridFilters(page) {
+  await expect(gridSearchBox(page), 'The grid should load').toBeVisible({ timeout: 60_000 });
+  const clear = page.getByRole('button', { name: /^(Clear all|Alles wissen)$/ }).filter({ visible: true });
+  if (await clear.count()) {
+    await clear.first().click();
+    await expect(clear, 'Saved grid filters should be cleared').toHaveCount(0);
+  }
+}
+
 // `expected` is text the matching rows show (an order row shows the customer name, not the e-mail).
 async function searchGrid(page, keyword, expected = keyword) {
-  await expect(gridRows(page).first(), 'The grid should load').toBeAttached({ timeout: 60_000 });
+  await clearGridFilters(page);
   // The sticky grid header renders a hidden copy of the search box.
-  const search = page.getByRole('textbox', { name: /Search by keyword|Zoeken op trefwoord/i }).filter({ visible: true }).first();
+  const search = gridSearchBox(page);
   await search.fill(keyword);
   await search.press('Enter');
   await expect(gridRows(page).filter({ hasText: expected }).first(), `The grid should find ${keyword}`).toBeVisible({ timeout: 60_000 });
@@ -58,4 +70,6 @@ async function openGridRow(page, rowText) {
 
 const expectNoAdminErrors = page => expect(page.locator('[data-ui-id="messages-message-error"]'), 'Magento should show no error').toHaveCount(0);
 
-module.exports = { adminLogin, adminMenu, adminMenuBar, adminGrid, gridRows, searchGrid, openGridRow, expectNoAdminErrors };
+module.exports = {
+  adminLogin, adminMenu, adminMenuBar, adminGrid, gridRows, gridSearchBox, clearGridFilters, searchGrid, openGridRow, expectNoAdminErrors,
+};

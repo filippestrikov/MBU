@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Webshop_products xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- New product -->
+    <product_detail>
+        <sku>21422142</sku>
+        <commerciele_benaming>commerciele_benaming NL test</commerciele_benaming>
+        <m3_description>m3 description NL  test</m3_description>
+        <warenwettelijke_naam>warenwettelijke_naam NL  test</warenwettelijke_naam>
+        <m3status>10</m3status>
+        <product_beschrijving>product_beschrijving NL  test</product_beschrijving>
+        <declaratie>declaratie NL  test</declaratie>
+        <eenheid>ST</eenheid>
+        <aantal_per_eenheid>1.000000000</aantal_per_eenheid>
+        <Nettogewicht>4.000000</Nettogewicht>
+        <Gewichtseenheid>KG</Gewichtseenheid>
+        <pricing>
+            <price_group id="RE" prijs="25.600000" />
+            <price_group id="20" prijs="21.200000" />
+            <price_group id="10" prijs="23.400000" />
+            <price_group id="28" prijs="0.000010" />
+            <price_group id="40" prijs="0.000010" />
+        </pricing>
+        <voedingswaarden_kcal>214</voedingswaarden_kcal>
+        <voedingswaarden_kj>888</voedingswaarden_kj>
+        <voedingswaarden_vetten>17,0</voedingswaarden_vetten>
+        <voedingswaarden_vetzuren>10,0</voedingswaarden_vetzuren>
+        <voedingswaarden_koolhydraten>1,7</voedingswaarden_koolhydraten>
+        <voedingswaarden_suikers>1,7</voedingswaarden_suikers>
+        <voedingswaarden_eiwit>14,0</voedingswaarden_eiwit>
+        <voedingswaarden_zout>4,0</voedingswaarden_zout>
+        <productsheet_url>https://velder.saas.contentserv.com/admin/ImageServer.php?ID=01cecbfa328213182e08e49a69f774b2d5b216fb6bc6a0b2a57781d954f1ae14:938069@mhr520&amp;rand=cc771c9626380dcc7c6808b018a27788&amp;lang=2&amp;force=1&amp;download=true&amp;omitPreview=true</productsheet_url>
+        <lov_biologisch>nee</lov_biologisch>
+        <lov_europese_bescherming>nee</lov_europese_bescherming>
+        <lov_geschiktvoorvegtariers>ja</lov_geschiktvoorvegtariers>
+        <lov_hittebehandeling_melk>geen (rauwmelks)</lov_hittebehandeling_melk>
+        <lov_product_landvanherkomst>Zwitserland</lov_product_landvanherkomst>
+        <lov_rauwmelks>ja</lov_rauwmelks>
+        <lov_puntschaal>3</lov_puntschaal>
+        <lov_smaaktags>kruidig,romig</lov_smaaktags>
+        <lov_typemelk>koemelk</lov_typemelk>
+        <allergenen>Melk,Lactose</allergenen>
+        <images>
+            <image type="F2">https://velder.xcdn.nl/prd2_100432_afbeelding_FIC1_F2_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F3">https://velder.xcdn.nl/prd2_100432_extraafbeelding_FIC1_F3_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F4">https://velder.xcdn.nl/prd2_100432_extraafbeelding_FIC1_F4_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F5">https://velder.xcdn.nl/prd2_100432_extraafbeelding_FIC1_F5_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+        </images>
+    </product_detail>
+    <!-- New product -->
+    <product_detail>
+        <sku>21422000</sku>
+        <commerciele_benaming>commerciele_benaming NL test222</commerciele_benaming>
+        <m3_description>m3 description NL test222</m3_description>
+        <warenwettelijke_naam>warenwettelijke_naam NL test222</warenwettelijke_naam>
+        <m3status>10</m3status>
+        <product_beschrijving>product_beschrijving NL test222</product_beschrijving>
+        <declaratie>declaratie NL test222</declaratie>
+        <eenheid>KG</eenheid>
+        <aantal_per_eenheid>1.000000000</aantal_per_eenheid>
+        <Nettogewicht>4.000000</Nettogewicht>
+        <Gewichtseenheid>KG</Gewichtseenheid>
+        <pricing>
+            <price_group id="RE" prijs="15.600000" />
+            <price_group id="20" prijs="11.200000" />
+            <price_group id="10" prijs="13.400000" />
+            <price_group id="28" prijs="0.000010" />
+        </pricing>
+        <voedingswaarden_kcal>214</voedingswaarden_kcal>
+        <voedingswaarden_kj>888</voedingswaarden_kj>
+        <voedingswaarden_vetten>17,0</voedingswaarden_vetten>
+        <voedingswaarden_vetzuren>10,0</voedingswaarden_vetzuren>
+        <voedingswaarden_koolhydraten>1,7</voedingswaarden_koolhydraten>
+        <voedingswaarden_suikers>1,7</voedingswaarden_suikers>
+        <voedingswaarden_eiwit>14,0</voedingswaarden_eiwit>
+        <voedingswaarden_zout>4,0</voedingswaarden_zout>
+        <productsheet_url>https://velder.saas.contentserv.com/admin/ImageServer.php?ID=01cecbfa328213182e08e49a69f774b2d5b216fb6bc6a0b2a57781d954f1ae14:938069@mhr520&amp;rand=cc771c9626380dcc7c6808b018a27788&amp;lang=2&amp;force=1&amp;download=true&amp;omitPreview=true</productsheet_url>
+        <lov_biologisch>Ja</lov_biologisch>
+        <lov_europese_bescherming>IGP</lov_europese_bescherming>
+        <lov_geschiktvoorvegtariers>Nee</lov_geschiktvoorvegtariers>
+        <lov_hittebehandeling_melk>Gesteriliseerd</lov_hittebehandeling_melk>
+        <lov_product_landvanherkomst>China</lov_product_landvanherkomst>
+        <lov_rauwmelks>Nee</lov_rauwmelks>
+        <lov_puntschaal>5</lov_puntschaal>
+        <lov_weidezuivelproduct>Ja</lov_weidezuivelproduct>
+        <lov_smaaktags>aromatisch,ziltig</lov_smaaktags>
+        <lov_typemelk>cow's milk</lov_typemelk>
+        <allergenen>Haver,Pistachenoten,Mosterd</allergenen>
+        <images>
+            <image type="F0">https://velder.xcdn.nl/prd2_100466_extraafbeelding_FIC1_F0_transparant_val_ja_intern.tif?d=2&amp;xv=2</image>
+            <image type="F2">https://velder.xcdn.nl/prd2_100466_afbeelding_FIC1_F2_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F3">https://velder.xcdn.nl/prd2_100466_extraafbeelding_FIC1_F3_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F4">https://velder.xcdn.nl/prd2_100466_extraafbeelding_FIC1_F4_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+            <image type="F5">https://velder.xcdn.nl/prd2_100466_extraafbeelding_FIC1_F5_wit_val_ja_intern.jpg?d=2&amp;xv=2</image>
+        </images>
+    </product_detail>
+    <!-- Update existing product product -->
+    <product_detail>
+        <sku>100790</sku>
+        <commerciele_benaming>Updated NL  Wynendale</commerciele_benaming>
+        <m3_description>Updated NL  WYNENDALE 2.8K</m3_description>
+        <warenwettelijke_naam>Updated NL  Gewassen korstkaas 50+</warenwettelijke_naam>
+        <m3status>20</m3status>
+        <product_beschrijving>Updated NL   Wynendale is een zachte kaas uit de omgeving van Brugge bereid met Belgische melk. De korst is meerdere malen met de hand gewassen tijdens de rijping en daardoor heeft de kaas een uitgesproken, licht pikante smaak rijk aan krachtige en fruitige aroma’s. </product_beschrijving>
+        <declaratie>Updated NL  gepasteuriseerde **koemelk**, zout, zuursel, dierlijk stremsel, kleurstof (E160b(ii))</declaratie>
+        <eenheid>STK</eenheid>
+        <aantal_per_eenheid>1</aantal_per_eenheid>
+        <Nettogewicht>2.8</Nettogewicht>
+        <Gewichtseenheid>kilo</Gewichtseenheid>
+        <pricing>
+            <price_group id="RE" prijs="5.600000" />
+            <price_group id="20" prijs="1.200000" />
+            <price_group id="10" prijs="3.400000" />
+            <price_group id="40" prijs="0.001000" />
+        </pricing>
+        <voedingswaarden_kcal>328</voedingswaarden_kcal>
+        <voedingswaarden_kj>1.359</voedingswaarden_kj>
+        <voedingswaarden_vetten>28,0</voedingswaarden_vetten>
+        <voedingswaarden_vetzuren>20,0</voedingswaarden_vetzuren>
+        <voedingswaarden_koolhydraten>0</voedingswaarden_koolhydraten>
+        <voedingswaarden_suikers>0</voedingswaarden_suikers>
+        <voedingswaarden_eiwit>19,0</voedingswaarden_eiwit>
+        <voedingswaarden_zout>1,80</voedingswaarden_zout>
+        <productsheet_url>https://velder.saas.contentserv.com/admin/ImageServer.php?ID=676aecf1be00b9990c37032dc19901e3090239bc19c0c1d8ab79c1e03320a177:938148@mhr520&amp;rand=e41da97a3304dbfeed62b3f9db6f1212&amp;lang=2&amp;force=1&amp;download=true&amp;omitPreview=true</productsheet_url>
+        <lov_typemelk>koemelk</lov_typemelk>
+        <lov_product_landvanherkomst>belgië</lov_product_landvanherkomst>
+        <lov_biologisch>nee</lov_biologisch>
+        <lov_geschiktvoorvegtariers>nee</lov_geschiktvoorvegtariers>
+        <lov_hittebehandeling_melk>gepasteuriseerd</lov_hittebehandeling_melk>
+        <lov_rauwmelks>nee</lov_rauwmelks>
+        <lov_puntschaal>3</lov_puntschaal>
+        <lov_weidezuivelproduct>nee</lov_weidezuivelproduct>
+        <allergenen>melk,lactose</allergenen>
+        <lov_smaaktags>aromatisch,pikant,kruidig</lov_smaaktags>
+        <images><image type="F2">https://velder.xcdn.nl/prd_100790_afbeelding_FIC1_F2_wit_val_ja_intern.jpg?d=2&amp;xv=2</image></images>
+    </product_detail>
+</Webshop_products>

@@ -18,6 +18,7 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | BulbBarn | `bulbbarn` | [BulbBarn coverage](docs/bulbbarn-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317652995/02.+BulbBarn+-+Playwright+Test+Automation) · Jira [BD2-5](https://mbu-digital.atlassian.net/browse/BD2-5) |
 | ParfumDeo | `parfumdeo` | [ParfumDeo coverage](docs/parfumdeo-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317194244/02.+ParfumDeo+-+Playwright+Test+Automation) · Jira [PDI-145](https://mbu-digital.atlassian.net/browse/PDI-145) |
 | Velder | `velder` | [Velder coverage](docs/velder-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/318013442/02.+Velder+-+Playwright+Test+Automation) · Jira [V2-82](https://mbu-digital.atlassian.net/browse/V2-82) |
+| Velder VDP (ACC) | `velder-acc` (opt-in: `npm run test:vdp`) | [Velder VDP coverage](docs/velder-vdp-coverage.md) — data-integration checks after a controlled Alumio run |
 | TruckFreakz | `truckfreakz` | [TruckFreakz coverage](docs/truckfreakz-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/318210049/02.+Truckfreakz+-+Playwright+Test+Automation) · Jira [TD-63](https://mbu-digital.atlassian.net/browse/TD-63) |
 | Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation) — blocked by Cloudflare bot verification on TST |
 
@@ -68,6 +69,13 @@ VELDER_CUSTOMER_PASSWORD=
 VELDER_ADMIN_URL=
 VELDER_ADMIN_USER=
 VELDER_ADMIN_PASSWORD=
+
+VELDER_ACC_BASE_URL=https://acc-bestellen-velder-com.mbu.dev/
+VELDER_ACC_HTTP_USER=
+VELDER_ACC_HTTP_PASSWORD=
+VELDER_ACC_ADMIN_URL=
+VELDER_ACC_ADMIN_USER=
+VELDER_ACC_ADMIN_PASSWORD=
 
 TRUCKFREAKZ_BASE_URL=https://tst-truckfreakz-com.mbu.dev/
 TRUCKFREAKZ_HTTP_USER=

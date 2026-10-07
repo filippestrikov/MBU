@@ -44,6 +44,17 @@ const clients = [
       password: process.env.PORTOFOONWEB_HTTP_PASSWORD,
     },
   },
+  {
+    // Velder ACC: checks the Magento result of a controlled Alumio data-integration run (VDP).
+    // Opt-in (npm run test:vdp) because it is only meaningful right after such a run.
+    name: 'velder-acc',
+    optIn: 'MBU_VDP',
+    baseURL: process.env.VELDER_ACC_BASE_URL,
+    httpCredentials: process.env.VELDER_ACC_HTTP_USER && {
+      username: process.env.VELDER_ACC_HTTP_USER,
+      password: process.env.VELDER_ACC_HTTP_PASSWORD,
+    },
+  },
 ];
 
 // Live sites must never be tested: only staging/test/dev hosts are allowed.
@@ -53,7 +64,7 @@ for (const { name, baseURL } of clients.filter(client => client.baseURL)) {
   if (!nonLiveHost.test(host)) throw new Error(`${name}: ${host} does not look like a staging/test host; refusing to run against a live site.`);
 }
 
-const missing = clients.filter(client => !client.baseURL).map(client => client.name);
+const missing = clients.filter(client => !client.baseURL && !client.optIn).map(client => client.name);
 if (missing.length) console.warn(`Skipping projects without a base URL in .env: ${missing.join(', ')}`);
 
 module.exports = defineConfig({
@@ -71,7 +82,7 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: clients.filter(client => client.baseURL).flatMap(({ name, baseURL, httpCredentials, storageState }) => {
+  projects: clients.filter(client => client.baseURL && (!client.optIn || process.env[client.optIn] === '1')).flatMap(({ name, baseURL, httpCredentials, storageState }) => {
     const use = { ...devices['Desktop Chrome'], baseURL, httpCredentials: httpCredentials || undefined };
     // Clients with a login wall log in once in a setup project and reuse the stored session.
     if (storageState) {
