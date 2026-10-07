@@ -15,19 +15,18 @@ async function expectLoaded(response) {
 }
 
 const main = page => page.getByRole('main');
-const priceBox = page => page.locator('.product-info-main .price-box').first();
+// The product's own price box comes before the price boxes of related products.
+const priceBox = page => main(page).locator('[data-role="priceBox"]').first();
 
 // "€12.00", "€ 14,52" and "14,52 €" -> 12 / 14.52. The last separator followed by two digits is the decimal one.
 const parsePrice = text => Number(text.replace(/[^\d.,]/g, '').replace(/[.,](?=\d{3}(\D|$))/g, '').replace(',', '.'));
 
+// The price box reads "As low as €12.00 (incl. VAT €14.52)": the main price is excl. VAT, the note incl. VAT.
 // Displayed prices: Magento updates the rendered text, not data-price-amount, when a variant is chosen.
 async function pdpPrices(page) {
-  const box = priceBox(page);
-  const amount = async locator => parsePrice(await locator.first().locator('.price').innerText());
-  return {
-    excl: await amount(box.locator('.normal-price .price-excluding-tax')),
-    incl: await amount(box.locator('.price-incl-tax .price-including-tax')),
-  };
+  const amounts = (await priceBox(page).innerText()).match(/€\s?\d[\d.,]*|\d[\d.,]*\s?€/g) ?? [];
+  expect(amounts.length, 'The price box should show an excl. and an incl. VAT price').toBeGreaterThanOrEqual(2);
+  return { excl: parsePrice(amounts[0]), incl: parsePrice(amounts.at(-1)) };
 }
 
 const withVat = excl => Math.round(excl * (1 + site.vatRate) * 100) / 100;
@@ -43,9 +42,8 @@ async function expectNoHorizontalScroll(page) {
   expect(scrolled, 'The page should not scroll horizontally (px)').toBeLessThanOrEqual(1);
 }
 
-// The Mirasvit layered navigation renders its filter options inside the left sidebar.
-const filterBlock = page => page.locator('.sidebar-main .block.filter, .sidebar-main .filter-options, [data-mst-nav-filter]')
-  .filter({ visible: true });
+// Magento's layered navigation block; its filter groups are accordion tabs (role tab / tabpanel).
+const filterBlock = page => page.locator('#layered-filter-block').filter({ visible: true });
 
 const hasFilters = async page => (await filterBlock(page).count()) > 0;
 

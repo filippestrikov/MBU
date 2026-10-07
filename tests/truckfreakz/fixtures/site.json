@@ -34,6 +34,7 @@
   },
   "specAttributes": ["voltage", "technology", "light_pattern", "certification", "water_resistance", "material", "dimensions", "mounting_distance", "application"],
   "category": "/truck-interior.html",
+  "subcategory": "Electrical equipment",
   "searchTerm": "scania",
   "comingSoon": {
     "path": "/errors/503.php",

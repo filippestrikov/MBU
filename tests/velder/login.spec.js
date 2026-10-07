@@ -4,7 +4,7 @@ const { site, expectLoaded, overlaps } = require('./shop');
 // Login-screen cases run logged out.
 test.use({ storageState: { cookies: [], origins: [] } });
 
-const footer = page => page.getByRole('contentinfo').or(page.locator('footer')).first();
+const footer = page => page.getByRole('contentinfo').first();
 const footerLink = (page, name) => footer(page).getByRole('link', { name, exact: true })
   .or(footer(page).getByRole('button', { name, exact: true })).first();
 const logo = page => page.getByRole('link', { name: 'store logo' });
@@ -62,6 +62,7 @@ test.describe('V2-47 login screen footer links', () => {
       await page.setViewportSize(viewport);
       await openLogin(page);
       await page.getByRole('textbox', { name: 'E-mail' }).click();
+      // stable: Google renders the badge with this class and no accessible name.
       const badge = page.locator('.grecaptcha-badge').first();
       await badge.waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
       const badgeBox = await badge.boundingBox().catch(() => null);

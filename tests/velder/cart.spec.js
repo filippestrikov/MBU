@@ -1,5 +1,7 @@
 const { test, expect } = require('@playwright/test');
-const { site, expectLoaded, main, cartLines, tileIncrease, cartQuantities, addFromSearch, emptyCartViaAdmin } = require('./shop');
+const {
+  site, expectLoaded, main, cartLines, tileIncrease, cartQuantities, trackCartRequests, settle, addFromSearch, emptyCartViaAdmin,
+} = require('./shop');
 
 // V2-43 / V2-66 / V2-67 cart quantities and V2-9 / V2-73 checkout, in ONE file so they never run in parallel
 // against the same customer cart. Uses the logged-in TST customer (internal MBU account). Each test starts
@@ -7,7 +9,10 @@ const { site, expectLoaded, main, cartLines, tileIncrease, cartQuantities, addFr
 // so one failure does not skip the rest.
 test.describe.configure({ timeout: 240_000 });
 
-test.beforeEach(async ({ browser }, testInfo) => { await emptyCartViaAdmin(browser, testInfo.project.use); });
+test.beforeEach(async ({ browser, page }, testInfo) => {
+  await emptyCartViaAdmin(browser, testInfo.project.use);
+  trackCartRequests(page);
+});
 test.afterAll(async ({ browser }, testInfo) => { await emptyCartViaAdmin(browser, testInfo.project.use); });
 
 // Clicks "+" on the homepage tile at `index` `times` times as fast as possible.
@@ -16,11 +21,6 @@ async function rapidPlus(page, index, times) {
   const plus = tileIncrease(page).filter({ visible: true }).nth(index);
   await plus.scrollIntoViewIfNeeded();
   for (let i = 0; i < times; i++) await plus.click({ delay: 0 });
-}
-
-async function settle(page) {
-  await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
-  await page.waitForTimeout(2_000);
 }
 
 async function cartWithOneProduct(page) {
@@ -78,7 +78,8 @@ test.describe('V2-66 cart page', () => {
   test('[V2-66] Verify drawer and cart page stay in sync after a drawer update', async ({ page }) => {
     await cartWithOneProduct(page);
     await page.getByRole('link', { name: 'Winkelwagen' }).first().click();
-    const drawerQty = page.locator('li.minicart-item').getByRole('spinbutton').first();
+    // stable: Magento's minicart item class; the drawer also lists suggestion tiles with their own quantity fields.
+    const drawerQty = page.locator('.minicart-item').getByRole('spinbutton').first();
     await expect(drawerQty).toBeVisible();
     await drawerQty.fill('3');
     await drawerQty.press('Tab');
@@ -104,7 +105,7 @@ test.describe('V2-73 checkout and order', () => {
     const text = await page.getByRole('main').innerText();
     const amounts = [...text.matchAll(/€\s*([\d.]+,\d{2})/g)].map(m => Number(m[1].replace(/\./g, '').replace(',', '.')));
     expect.soft(amounts, `Checkout should show the product price € ${productPrice} (amounts found: ${amounts.join(', ')})`).toContain(productPrice);
-    await expect(page.locator('input[name="payment[method]"][value="free"], #free'), 'A priced order should not fall back to the zero-total "free" payment method').toHaveCount(0);
+    await expect(page.locator('input[name="payment[method]"][value="free"]'), 'A priced order should not fall back to the zero-total "free" payment method').toHaveCount(0);
   });
 
   test('[V2-73] Run the Velder regression checklist - Checkout & order item (TST)', async ({ page }) => {
@@ -115,8 +116,11 @@ test.describe('V2-73 checkout and order', () => {
     await page.locator('input[name="reference"]').fill(site.testOrder.reference);
     // A delivery date is required; pick the first selectable day (searching three months ahead).
     await page.getByRole('button', { name: 'Andere bezorgdatum' }).click();
-    const freeDays = page.locator('.ui-datepicker-calendar td:not(.ui-state-disabled):not(.ui-datepicker-unselectable) a');
-    for (let month = 0; month < 3 && !(await freeDays.count()); month++) await page.locator('.ui-datepicker-next').click();
+    // jQuery UI renders selectable days as links and blocked days as plain text.
+    const datepicker = page.locator('#ui-datepicker-div');
+    await expect(datepicker).toBeVisible();
+    const freeDays = datepicker.getByRole('link', { name: /^\d{1,2}$/ });
+    for (let month = 0; month < 3 && !(await freeDays.count()); month++) await datepicker.locator('[data-handler="next"]').click();
     expect(await freeDays.count(), 'At least one delivery date should be selectable in the next three months').toBeGreaterThan(0);
     await freeDays.first().click();
     await page.getByRole('button', { name: 'Bestelling afronden' }).click();

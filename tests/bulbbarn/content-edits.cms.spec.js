@@ -98,11 +98,12 @@ test.describe('BBM2-65 Blog (admin edits)', () => {
   const featuredSwitch = page => page.getByRole('checkbox', { name: /Mark as Featured/ });
 
   async function setFeatured(page, title, featured) {
-    await openGridRow(page, /^\s*Content/, 'Posts', title);
+    await openGridRow(page, 'content', 'Posts', title);
     const toggle = featuredSwitch(page);
     await expect(toggle).toBeAttached({ timeout: 30_000 });
     if ((await toggle.isChecked()) !== featured) {
-      await toggle.locator('xpath=..').locator('label').first().click();
+      // The checkbox is visually hidden; the field label and the switch (last) both label it.
+      await page.locator(`label[for="${await toggle.getAttribute('id')}"]`).last().click();
       await expect(toggle).toBeChecked({ checked: featured });
     }
     await saveAdminForm(page);
@@ -122,7 +123,7 @@ test.describe('BBM2-65 Blog (admin edits)', () => {
     try {
       await setFeatured(page, other, true);
       expect(await featuredOnOverview(page), `${other} should now be the featured post`).toBe(other);
-      await openGridRow(page, /^\s*Content/, 'Posts', blog.featuredPost);
+      await openGridRow(page, 'content', 'Posts', blog.featuredPost);
       await expect(featuredSwitch(page), `${blog.featuredPost} should be unmarked automatically`).not.toBeChecked();
     } finally {
       await setFeatured(page, blog.featuredPost, true);

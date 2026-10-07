@@ -21,6 +21,14 @@ Expected copy belongs in `tests/<client>/fixtures/`.
 | TruckFreakz | `truckfreakz` | [TruckFreakz coverage](docs/truckfreakz-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/318210049/02.+Truckfreakz+-+Playwright+Test+Automation) · Jira [TD-63](https://mbu-digital.atlassian.net/browse/TD-63) |
 | Portofoonweb | `portofoonweb` | [Portofoonweb coverage](docs/portofoonweb-coverage.md) · [Confluence](https://mbu-digital.atlassian.net/wiki/spaces/MBUCD/pages/317882369/02.+PortofoonWEB+-+Playwright+Test+Automation) — blocked by Cloudflare bot verification on TST |
 
+## Writing tests
+
+Every test follows [docs/test-writing-rules.md](docs/test-writing-rules.md): stable, readable
+selectors (roles and labels first, no XPath or theme classes), an assertion after each meaningful
+action, no fixed waits, one test per manual case, short comments only where they help.
+Run `npm run lint:tests` before committing; it checks the mechanical part of the rules.
+Magento Admin helpers shared by all clients live in `tests/common/magento-admin.js`.
+
 ## Setup
 
 Requires Node.js 18 or newer. Playwright 1.55.1 is pinned for compatibility

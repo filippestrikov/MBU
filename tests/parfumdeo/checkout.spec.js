@@ -78,7 +78,7 @@ test.describe('PDI-103 / PDI-122 / PDI-41 payment step', () => {
 
   test('[PDI-103] Do not keep iDEAL selected when gift card payment is chosen', async ({ page }) => {
     await paymentRadio(page, 'mollie_methods_ideal').check();
-    await page.locator('#payment-method-coupon-code-option, #coupon-code-option, input[value="coupon_code"]').first().check();
+    await page.getByRole('radio', { name: 'ParfumDeo.nl cadeaukaart' }).check();
     await expect(paymentRadio(page, 'mollie_methods_ideal'), 'iDEAL should be deselected').not.toBeChecked();
   });
 

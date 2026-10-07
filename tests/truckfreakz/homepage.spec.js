@@ -3,6 +3,8 @@ const { site, expectLoaded, main, pdpPrices, expectNoHorizontalScroll, redesignM
 
 const languageButton = page => page.getByRole('banner').getByRole('button', { name: new RegExp(site.stores.en.language) });
 const searchBox = page => page.getByRole('banner').getByRole('combobox', { name: /Search/ });
+// The TD-24 community section, found by its agreed title (the new design is not on TST yet).
+const communityBlock = page => main(page).locator('section').filter({ has: redesignMarker(page) }).last();
 
 test.beforeEach(async ({ page }) => {
   await expectLoaded(await page.goto('/'));
@@ -66,7 +68,8 @@ test.describe('TD-24 Homepage – newsletter and footer', () => {
       await expectLoaded(await page.goto('/'));
       await openMobileMenu(page);
       for (const category of ['Truck brand', 'Truck Interior', 'Lighting']) {
-        const item = page.locator('a.level-top').filter({ hasText: category }).filter({ visible: true }).first();
+        // includeHidden: the open menu container keeps aria-hidden="true" (accessibility finding), so filter on visibility.
+        const item = page.getByRole('menuitem', { name: category, includeHidden: true }).filter({ visible: true }).first();
         await expect(item).toBeInViewport();
         // The item must be the top element at its position, not hidden behind another menu layer.
         const onTop = await item.evaluate(link => {
@@ -109,14 +112,14 @@ test.describe('TD-24 Homepage – new design', () => {
   });
 
   test('[TD-24] Remove Instagram indicator from community block', async ({ page }) => {
-    const block = main(page).locator('section, div').filter({ has: redesignMarker(page) }).last();
+    const block = communityBlock(page);
     await expect(block.getByText(/instagram/i)).toHaveCount(0);
     await expect(block.locator('a[href*="instagram.com"]')).toHaveCount(0);
   });
 
   test('[TD-24] Display product hotspot dots on community images', async ({ page }) => {
-    const block = main(page).locator('section, div').filter({ has: redesignMarker(page) }).last();
-    const hotspots = block.locator('[class*="hotspot"], [data-hotspot]');
+    const block = communityBlock(page);
+    const hotspots = block.getByRole('button', { name: /hotspot|product/i });
     await expect(hotspots.first()).toBeVisible();
   });
 
@@ -141,7 +144,8 @@ test.describe('TD-24 Homepage – new design', () => {
 
   test('[TD-24] Replace JCB payment icon with new iDEAL Wero icon', async ({ page }) => {
     const footer = page.getByRole('contentinfo').first();
-    await expect(footer.locator('img[src*="jcb" i], img[alt*="JCB" i]')).toHaveCount(0);
-    await expect(footer.locator('img[src*="wero" i], img[alt*="wero" i]').first()).toBeVisible();
+    await expect(footer.getByRole('img', { name: /JCB/i }), 'The JCB icon should be gone').toHaveCount(0);
+    await expect(footer.locator('img[src*="jcb" i]'), 'No JCB icon without alt text either').toHaveCount(0);
+    await expect(footer.getByRole('img', { name: /Wero/i }).first(), 'The iDEAL | Wero icon should be shown').toBeVisible();
   });
 });

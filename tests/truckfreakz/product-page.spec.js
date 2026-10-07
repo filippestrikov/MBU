@@ -2,19 +2,27 @@ const { test, expect } = require('@playwright/test');
 const { site, storeBase, expectLoaded, main, priceBox, pdpPrices, withVat, expectNoHorizontalScroll } = require('./shop');
 
 const { configurable, simple } = site;
-const variant = page => page.locator('.swatch-attribute[data-attribute-code="color"]');
-const swatch = (page, label) => variant(page).locator(`.swatch-option[data-option-label="${label}"]`);
+const variant = page => main(page).getByRole('listbox', { name: 'Color' });
+const swatch = (page, label) => variant(page).getByRole('option', { name: label, exact: true });
+// stable: the Fotorama gallery marks the shown stage image only with its own state classes.
 const activeImage = page => page.locator('.fotorama__stage__frame.fotorama__active img').first();
+// stable: TD-15 module class; the section has no heading or landmark of its own.
 const suitableFor = page => main(page).locator('.suitable-manufacturer');
+// stable: TD-15 Product Label badge class; the badge text varies per product.
+const productLabel = page => main(page).locator('.product-label');
+const inclVatNote = (page, text) => priceBox(page).getByText(text);
+// The table caption is translated, so find the specification table by its first row header.
+const specs = (page, store) => main(page).getByRole('table').filter({ has: page.getByRole('rowheader', { name: store.specLabels[0], exact: true }) });
+const escape = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 test.describe('TD-15 New Product Page – product label', () => {
   test('[TD-15] Show product label only when a label is configured', async ({ page }) => {
     await expectLoaded(await page.goto(site.stores.en.configurable));
-    await expect(main(page).locator('.product-label')).toHaveText(configurable.label);
+    await expect(productLabel(page)).toHaveText(configurable.label);
 
     await expectLoaded(await page.goto(simple.path));
     await expect(main(page).getByText(simple.sku)).toBeVisible();
-    await expect(main(page).locator('.product-label'), 'A product without a label should show no badge').toHaveCount(0);
+    await expect(productLabel(page), 'A product without a label should show no badge').toHaveCount(0);
   });
 });
 
@@ -61,8 +69,8 @@ test.describe('TD-15 New Product Page – tax pricing', () => {
     expect(excl).toBeGreaterThan(0);
     expect(incl, 'Incl. VAT should be the excl. price plus 21% VAT').toBeCloseTo(withVat(excl), 2);
     // The excl. VAT price is the main price; the incl. amount is the note in brackets.
-    await expect(priceBox(page).locator('.normal-price .price-excluding-tax')).toBeVisible();
-    await expect(priceBox(page).locator('.price-incl-tax')).toContainText(site.stores.en.inclVat);
+    await expect(priceBox(page)).toHaveText(new RegExp(`^[^(]*${escape(excl.toFixed(2))}[^(]*\\(\\s*${escape(site.stores.en.inclVat)}`));
+    await expect(inclVatNote(page, site.stores.en.inclVat)).toBeVisible();
   });
 
   test('[TD-15] Display correct VAT information for configurable products', async ({ page }) => {
@@ -71,13 +79,13 @@ test.describe('TD-15 New Product Page – tax pricing', () => {
     const { excl, incl } = await pdpPrices(page);
     expect(excl).toBe(configurable.variants[0].excl);
     expect(incl).toBeCloseTo(withVat(excl), 2);
-    await expect(priceBox(page).locator('.price-incl-tax')).toContainText(site.stores.en.inclVat);
+    await expect(inclVatNote(page, site.stores.en.inclVat)).toBeVisible();
   });
 
   test('[TD-15] Display VAT note on every store view', async ({ page }) => {
     for (const [code, store] of Object.entries(site.stores)) {
       await expectLoaded(await page.goto(storeBase(code) + store.configurable));
-      await expect.soft(priceBox(page).locator('.price-incl-tax'), `${code}: incl. VAT note`).toContainText(store.inclVat);
+      await expect.soft(inclVatNote(page, store.inclVat), `${code}: incl. VAT note`).toBeVisible();
     }
   });
 });
@@ -85,17 +93,17 @@ test.describe('TD-15 New Product Page – tax pricing', () => {
 test.describe('TD-15 New Product Page – configurable product', () => {
   test.beforeEach(async ({ page }) => {
     await expectLoaded(await page.goto(site.stores.en.configurable));
-    await expect(variant(page).locator('.swatch-option').first()).toBeVisible();
+    await expect(variant(page).getByRole('option').first()).toBeVisible();
   });
 
   test('[TD-15] Render visual swatches and preselect first available variant when configured', async ({ page }) => {
-    const options = variant(page).locator('.swatch-option');
+    const options = variant(page).getByRole('option');
     await expect(options).toHaveCount(configurable.variants.length);
     for (const { label } of configurable.variants) {
       await expect(swatch(page, label), `${label} should be an image swatch`).toHaveClass(/\bimage\b/);
     }
     await expect(options.first()).toHaveAttribute('aria-checked', 'true');
-    await expect(variant(page).locator('.swatch-attribute-selected-option')).toHaveText(configurable.variants[0].label);
+    await expect(main(page).locator('[data-attribute-code="color"]').getByText(configurable.variants[0].label, { exact: true }), 'The chosen colour should be named').toBeVisible();
   });
 
   test('[TD-15] Update configurable price and VAT note when variant changes', async ({ page }) => {
@@ -104,7 +112,7 @@ test.describe('TD-15 New Product Page – configurable product', () => {
       await expect(swatch(page, label)).toHaveAttribute('aria-checked', 'true');
       await expect.poll(async () => (await pdpPrices(page)).excl, { message: `${label}: excl. price` }).toBe(excl);
       expect((await pdpPrices(page)).incl, `${label}: incl. VAT amount`).toBeCloseTo(withVat(excl), 2);
-      await expect(priceBox(page).locator('.price-incl-tax')).toContainText(withVat(excl).toFixed(2));
+      await expect(priceBox(page)).toContainText(withVat(excl).toFixed(2));
     }
   });
 
@@ -113,7 +121,7 @@ test.describe('TD-15 New Product Page – configurable product', () => {
       await swatch(page, label).click();
       await expect(activeImage(page), `${label}: gallery should show the variant image`).toHaveAttribute('src', new RegExp(image));
     }
-    await expect(page.locator('.gallery-placeholder__image').filter({ visible: true }), 'No placeholder should block the gallery').toHaveCount(0);
+    await expect(page.getByRole('img', { name: 'main product photo' }).filter({ visible: true }), 'No placeholder should block the gallery').toHaveCount(0);
   });
 });
 
@@ -121,10 +129,10 @@ test.describe('TD-15 New Product Page – specifications', () => {
   for (const [code, store] of Object.entries(site.stores)) {
     test(`[TD-15] Display specification attributes on PDP when values are filled (${code})`, async ({ page }) => {
       await expectLoaded(await page.goto(storeBase(code) + store.configurable));
-      const table = main(page).locator('table.additional-attributes');
+      const table = specs(page, store);
       await expect(table).toBeVisible();
-      await expect(table.locator('th')).toHaveText(store.specLabels);
-      for (const cell of await table.locator('td').all()) await expect(cell).not.toBeEmpty();
+      await expect(table.getByRole('rowheader')).toHaveText(store.specLabels);
+      for (const cell of await table.getByRole('cell').all()) await expect(cell).not.toBeEmpty();
     });
   }
 });

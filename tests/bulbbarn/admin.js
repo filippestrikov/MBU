@@ -1,59 +1,38 @@
 const { expect } = require('@playwright/test');
+const admin = require('../common/magento-admin');
 const shop = require('./fixtures/shop.json');
 
 const adminUrl = () => process.env.BULBBARN_ADMIN_URL;
 const hasAdmin = () => Boolean(adminUrl() && process.env.BULBBARN_ADMIN_USER && process.env.BULBBARN_ADMIN_PASSWORD);
 
-async function adminLogin(page) {
-  await page.goto(adminUrl());
-  const username = page.getByRole('textbox', { name: 'Username *' });
-  if (await username.isVisible()) {
-    await username.fill(process.env.BULBBARN_ADMIN_USER);
-    await page.getByRole('textbox', { name: 'Password *' }).fill(process.env.BULBBARN_ADMIN_PASSWORD);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-  }
-  await expect(page.getByRole('link', { name: /Dashboard/ }).first()).toBeVisible();
-}
+const adminLogin = page => admin.adminLogin(page, {
+  url: adminUrl(), user: process.env.BULBBARN_ADMIN_USER, password: process.env.BULBBARN_ADMIN_PASSWORD,
+});
+const { adminMenu, gridRows } = admin;
 
-// Admin URLs carry secret keys, so take the keyed URL from the (hidden) menu link, e.g. Sales > Orders.
-async function adminMenu(page, section, item) {
-  const link = page.locator('#nav > li').filter({ hasText: section }).first()
-    .getByRole('link', { name: item, exact: true, includeHidden: true }).first();
-  await page.goto(await link.getAttribute('href'));
-}
-
-// The grid also renders hidden copies of its wrapper for the sticky header.
-const orderGrid = page => page.locator('.admin__data-grid-wrap').filter({ visible: true }).first();
-
+// Order rows show the customer name, not the e-mail address that was searched for.
 async function searchOrders(page, keyword) {
-  await adminMenu(page, /Sales/, 'Orders');
-  await expect(orderGrid(page).locator('tbody tr').first()).toBeVisible({ timeout: 30_000 });
-  // The grid also renders a hidden copy of the search box in its sticky header.
-  const search = page.getByRole('textbox', { name: 'Search by keyword' }).filter({ visible: true }).first();
-  await search.fill(keyword);
-  await search.press('Enter');
-  await expect(orderGrid(page).locator('tbody tr').first()).toContainText(keyword.includes('@') ? shop.testOrder.firstname : keyword);
+  await adminMenu(page, 'sales', 'Orders');
+  await admin.searchGrid(page, keyword, keyword.includes('@') ? shop.testOrder.firstname : keyword);
 }
 
 // Opens the newest order placed by the Playwright test customer.
 async function openLatestTestOrder(page) {
   await searchOrders(page, shop.testOrder.email);
-  await orderGrid(page).locator('tbody tr').first().getByRole('link', { name: 'View' }).click();
+  await gridRows(page).first().getByRole('link', { name: 'View' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(/#\s*\d+/);
 }
 
-// Opens a grid row's edit form (e.g. a CMS page by title) through its keyed Edit link.
+// Opens a grid row's edit form (e.g. a CMS page by title), e.g. openGridRow(page, 'content', 'Pages', title).
 async function openGridRow(page, section, item, rowText) {
   await adminMenu(page, section, item);
-  const row = orderGrid(page).locator('tbody tr.data-row').filter({ hasText: rowText }).first();
-  await expect(row).toBeAttached({ timeout: 60_000 });
-  await page.goto(await row.getByRole('link', { name: 'Edit', includeHidden: true }).getAttribute('href'));
+  await admin.openGridRow(page, rowText);
 }
 
 // CMS page content lives in the Page Builder form field; read/write it through the admin uiRegistry.
 async function openCmsPage(page, title) {
-  await openGridRow(page, /^\s*Content/, 'Pages', title);
-  await page.locator('[data-index="content"] .fieldset-wrapper-title, .fieldset-wrapper-title:has-text("Content")').first().click();
+  await openGridRow(page, 'content', 'Pages', title);
+  await page.locator('[data-index="content"]').getByText('Content', { exact: true }).first().click();
   await expect.poll(() => cmsContent(page).catch(() => ''), { message: 'Page Builder content should load', timeout: 30_000 })
     .toMatch(/data-content-type/);
 }
@@ -74,7 +53,7 @@ async function saveAdminForm(page) {
   const response = await saved;
   expect(response.status(), 'Magento should accept the save').toBeLessThan(400);
   await page.waitForLoadState('load');
-  await expect(page.locator('.message-error, .messages .error')).toHaveCount(0);
+  await admin.expectNoAdminErrors(page);
 }
 
 // Page Builder regenerates its 7-character style ids on every load/save, and browser form
@@ -105,6 +84,6 @@ async function withCmsPageChange(page, title, change, check) {
 }
 
 module.exports = {
-  hasAdmin, adminLogin, adminMenu, orderGrid, searchOrders, openLatestTestOrder,
+  hasAdmin, adminLogin, adminMenu, gridRows, searchOrders, openLatestTestOrder,
   openGridRow, openCmsPage, cmsContent, setCmsContent, saveAdminForm, withCmsPageChange,
 };

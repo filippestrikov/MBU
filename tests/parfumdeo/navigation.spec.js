@@ -2,13 +2,13 @@ const { test, expect } = require('@playwright/test');
 const { site, expectLoaded } = require('./shop');
 
 // Expectations from the Confluence page "PDI-23 - Layered navigation & SEO filter URLs (Mirasvit)".
-const sidebar = page => page.getByRole('main').locator('aside, [class*="sidebar"], [class*="layered"]').first();
 const filterButtons = page => page.getByRole('main').getByRole('button', { name: / filter$/ });
 
 async function openFilter(page, name) {
   const button = page.getByRole('main').getByRole('button', { name: `${name} filter` });
   if ((await button.getAttribute('aria-expanded')) !== 'true') await button.click();
-  return button.locator('xpath=ancestor::*[self::div or self::li][1]');
+  // The filter button names its option panel in aria-controls.
+  return page.locator(`#${await button.getAttribute('aria-controls')}`);
 }
 
 test.describe('PDI-23 / PDI-103 layered navigation', () => {
@@ -55,10 +55,11 @@ test.describe('PDI-23 / PDI-103 layered navigation', () => {
     await expectLoaded(await page.goto(`/catalogsearch/result/?q=${site.searchTerm}`));
     const nav = page.getByRole('navigation', { name: 'pagination' }).last();
     await nav.scrollIntoViewIfNeeded();
-    const [navBox, list] = await Promise.all([nav.boundingBox(), nav.locator('ul, ol').first().boundingBox()]);
-    const listBox = list ?? navBox;
-    const products = await page.getByRole('main').locator('ol.products, ul.products, [class*="product-grid"], .products-grid').first().boundingBox();
-    const area = products ?? navBox;
+    const listBox = await nav.getByRole('list').first().boundingBox() ?? await nav.boundingBox();
+    // The product grid spans from the left edge of the first tile to the right edge of the last tile in a row.
+    const tiles = await Promise.all((await page.getByRole('main').getByRole('button', { name: /^In Winkelwagen/ }).filter({ visible: true }).all()).map(button => button.boundingBox()));
+    const left = Math.min(...tiles.map(box => box.x));
+    const area = { x: left, width: Math.max(...tiles.map(box => box.x + box.width)) - left };
     const offset = Math.abs((listBox.x + listBox.width / 2) - (area.x + area.width / 2));
     expect(offset, 'Pagination should be centred under the products').toBeLessThan(40);
   });

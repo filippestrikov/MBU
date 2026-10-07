@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { site, storeBase, expectLoaded, main, pdpPrices, openMobileMenu } = require('./shop');
+const { site, storeBase, expectLoaded, priceBox, pdpPrices, openMobileMenu } = require('./shop');
 
 const languageButton = page => page.getByRole('banner').getByRole('button', { name: /English|Nederlands|Deutsch|Francais/ });
 const storeLink = (page, code) => page.locator(`a[href*="___store/${code}/"]`).filter({ visible: true }).first();
@@ -20,7 +20,7 @@ test.describe('TD-8 Language / Region / VAT selector', () => {
     // Not applicable while every store view sells in EUR; this check fails once another currency appears.
     for (const [code, store] of Object.entries(site.stores)) {
       await expectLoaded(await page.goto(storeBase(code) + store.configurable));
-      await expect.soft(main(page).locator('.price-box .price').first(), `${code} prices in EUR`).toContainText('€');
+      await expect.soft(priceBox(page), `${code} prices in EUR`).toContainText('€');
       await expect.soft(page.locator('meta[content="EUR"]').first(), `${code} currency`).toBeAttached();
     }
   });
@@ -34,7 +34,8 @@ test.describe('TD-8 Language / Region / VAT selector', () => {
       expect(header.x + header.width, 'Header should fit the viewport').toBeLessThanOrEqual(site.viewports[name].width + 1);
       // Below desktop width the language switcher sits at the bottom of the hamburger menu and shows flags.
       await openMobileMenu(page);
-      await page.locator('.view-en').filter({ visible: true }).last().click();
+      // includeHidden: the open menu container keeps aria-hidden="true" (accessibility finding).
+      await page.getByRole('button', { name: site.stores.en.language, includeHidden: true }).filter({ visible: true }).last().click();
       for (const code of ['nl', 'de', 'fr']) {
         await expect(storeLink(page, code), `${code} flag should be visible`).toBeInViewport();
       }

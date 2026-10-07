@@ -32,5 +32,6 @@
     "mollie_methods_klarna": "Pay with Klarna.",
     "mollie_methods_paypal": "PayPal"
   },
-  "successMessage": "We hebben je bestelling ontvangen!"
+  "successMessage": "We hebben je bestelling ontvangen!",
+  "homeUsp": "Gratis verzending"
 }

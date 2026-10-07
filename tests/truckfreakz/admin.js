@@ -1,38 +1,17 @@
 const { expect } = require('@playwright/test');
+const { adminLogin: login, adminMenu, searchGrid, openGridRow } = require('../common/magento-admin');
 
 const hasAdmin = () => Boolean(process.env.TRUCKFREAKZ_ADMIN_URL && process.env.TRUCKFREAKZ_ADMIN_USER && process.env.TRUCKFREAKZ_ADMIN_PASSWORD);
 
-async function adminLogin(page) {
-  await page.goto(process.env.TRUCKFREAKZ_ADMIN_URL);
-  const username = page.getByRole('textbox', { name: 'Username *' });
-  if (await username.isVisible()) {
-    await username.fill(process.env.TRUCKFREAKZ_ADMIN_USER);
-    await page.getByRole('textbox', { name: 'Password *' }).fill(process.env.TRUCKFREAKZ_ADMIN_PASSWORD);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-  }
-  await expect(page.getByRole('link', { name: /Dashboard/ }).first()).toBeVisible();
-}
-
-// Admin URLs carry secret keys, so take the keyed URL from the (hidden) menu link.
-async function adminMenu(page, section, item) {
-  const link = page.locator('#nav > li').filter({ hasText: section }).first()
-    .getByRole('link', { name: item, exact: true, includeHidden: true }).first();
-  await page.goto(await link.getAttribute('href'));
-}
-
-// The grid also renders hidden copies of its wrapper and search box for the sticky header.
-const grid = page => page.locator('.admin__data-grid-wrap').filter({ visible: true }).first();
+const adminLogin = page => login(page, {
+  url: process.env.TRUCKFREAKZ_ADMIN_URL, user: process.env.TRUCKFREAKZ_ADMIN_USER, password: process.env.TRUCKFREAKZ_ADMIN_PASSWORD,
+});
 
 async function openProduct(page, sku) {
-  await adminMenu(page, /Catalog/, 'Products');
-  await expect(grid(page).locator('tbody tr').first()).toBeVisible({ timeout: 60_000 });
-  const search = page.getByRole('textbox', { name: 'Search by keyword' }).filter({ visible: true }).first();
-  await search.fill(sku);
-  await search.press('Enter');
-  const row = grid(page).locator('tbody tr.data-row').filter({ hasText: sku }).first();
-  await expect(row).toBeVisible({ timeout: 60_000 });
-  await page.goto(await row.getByRole('link', { name: 'Edit', includeHidden: true }).getAttribute('href'));
-  await expect(page.locator('.fieldset-wrapper-title').filter({ visible: true }).first()).toBeVisible({ timeout: 90_000 });
+  await adminMenu(page, 'catalog', 'Products');
+  await searchGrid(page, sku);
+  await openGridRow(page, sku);
+  await expect(page.getByRole('textbox', { name: 'Product Name' }), 'The product form should load').toBeVisible({ timeout: 90_000 });
 }
 
 // Reads product form fields from the admin uiRegistry: value, option labels and the labels of all
@@ -55,4 +34,4 @@ const productFields = (page, indexes) => page.evaluate(wanted => new Promise(res
   resolve(result);
 })), indexes);
 
-module.exports = { hasAdmin, adminLogin, adminMenu, openProduct, productFields };
+module.exports = { hasAdmin, adminLogin, openProduct, productFields };

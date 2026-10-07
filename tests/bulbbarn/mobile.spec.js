@@ -37,8 +37,8 @@ async function logIn(page) {
 }
 
 async function openMenu(page) {
-  // The header hamburger is labelled "Menu sluiten" even while the menu is closed.
-  await page.locator('header.page-header').getByRole('button', { name: 'Menu sluiten' }).filter({ visible: true }).first().tap();
+  // Match both labels: the closed-menu button is wrongly labelled "Menu sluiten" (staging finding 16).
+  await page.getByRole('banner').getByRole('button', { name: /^Menu (openen|sluiten)$/, expanded: false }).tap();
   const menu = page.getByRole('dialog', { name: 'Hoofdmenu' });
   await expect(menu).toBeVisible();
   return menu;
@@ -202,9 +202,9 @@ test.describe('BBM2-85 Feedback mobile', () => {
 
   test('[BBM2-85] Display required homepage icons and CMS/Trustpilot blocks', async ({ page }) => {
     await expectLoaded(await page.goto('/'));
-    await expect(page.locator('.home-ups-row')).toBeVisible();
+    await expect(page.getByRole('main').getByText(shop.homeUsp).first(), 'The USP row should be shown').toBeVisible();
     await expect(page.getByRole('heading', { name: 'Explore by category' })).toBeVisible();
-    await expect(page.locator('[class*="trustpilot" i], iframe[src*="trustpilot"]').first(), 'A Trustpilot block should be shown').toBeAttached();
+    await expect(page.locator('iframe[src*="trustpilot" i]').first(), 'A Trustpilot block should be shown').toBeAttached();
   });
 
   test('[BBM2-85] Display Blog Post page correctly on mobile', async ({ page }) => {
@@ -225,13 +225,13 @@ test.describe('BBM2-85 Feedback mobile', () => {
 
   test('[BBM2-85] Display language switcher correctly in footer', async ({ page }) => {
     await expectLoaded(await page.goto('/'));
-    const switcher = page.locator('footer').getByRole('button', { name: 'Taal' });
+    const switcher = page.getByRole('contentinfo').getByRole('button', { name: 'Taal' });
     await switcher.scrollIntoViewIfNeeded();
     await switcher.tap();
-    const english = page.locator('footer').getByRole('link', { name: 'English' });
+    const english = page.getByRole('contentinfo').getByRole('link', { name: 'English' });
     await expect(english).toBeVisible();
     await english.tap();
-    await expect(page.locator('footer').getByRole('link', { name: 'Customer Care' })).toBeAttached();
+    await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Customer Care' })).toBeAttached();
   });
 
   test('[BBM2-85] Display product options when adding configurable/custom-option items', async ({ page }) => {
@@ -290,7 +290,7 @@ test.describe('BBM2-85 Feedback mobile', () => {
 
   test('[BBM2-85] Keep footer scrolling stable on mobile', async ({ page }) => {
     await expectLoaded(await page.goto('/'));
-    await page.locator('footer').scrollIntoViewIfNeeded();
+    await page.getByRole('contentinfo').scrollIntoViewIfNeeded();
     const bottom = await page.evaluate(() => window.scrollY);
     for (const delta of [-300, 200, -200, 300]) {
       const before = await page.evaluate(() => window.scrollY);
@@ -301,7 +301,7 @@ test.describe('BBM2-85 Feedback mobile', () => {
       expect(Math.abs(moved), `Scrolling by ${delta}px should not jump`).toBeLessThanOrEqual(Math.abs(delta) + 50);
     }
     expect(await page.evaluate(() => getComputedStyle(document.body).overflow), 'The page should not be scroll-locked').not.toBe('hidden');
-    await page.locator('footer').getByRole('button', { name: 'Taal' }).tap();
+    await page.getByRole('contentinfo').getByRole('button', { name: 'Taal' }).tap();
     expect(Math.abs((await page.evaluate(() => window.scrollY)) - bottom), 'Using a footer control should not jump the page').toBeLessThan(400);
   });
 

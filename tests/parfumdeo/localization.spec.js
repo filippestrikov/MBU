@@ -38,9 +38,9 @@ test.describe('PDI-103 / PDI-116 / PDI-56 Dutch copy', () => {
   test('[PDI-116] Display corrected password-reset request message', async ({ page }) => {
     // Unregistered address only: a registered one would e-mail a real customer (TST and PRD share accounts).
     await expectLoaded(await page.goto('/customer/account/forgotpassword/'));
-    await page.locator('#email_address').fill('playwright-test-reset@example.com');
+    await page.getByRole('textbox', { name: /E-mailadres/ }).fill('playwright-test-reset@example.com');
     await page.getByRole('main').getByRole('button').filter({ hasText: /herstel|reset|verstuur|versturen|wachtwoord/i }).first().click();
-    await expect(page.getByRole('alert').or(page.locator('.messages')).first()).toContainText(site.copy.passwordResetMessage);
+    await expect(page.getByRole('alert').first()).toContainText(site.copy.passwordResetMessage);
   });
 
   test('[PDI-116] Use informal je/jij wording in forgot-password frontend copy', async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe('PDI-135 / PDI-58 failed payment (Mollie test mode)', () => {
     await page.waitForURL(/mollie\.com/, { timeout: 60_000 });
     await chooseMollieStatus(page, /failed|mislukt/i);
     await page.waitForURL(/mbu\.dev/, { timeout: 60_000 });
-    const message = page.getByRole('alert').or(page.locator('.messages')).filter({ hasText: /mislukt|failed/i }).first();
+    const message = page.getByRole('alert').filter({ hasText: /mislukt|failed/i }).first();
     await expect(message).toBeVisible();
     await expect(message).toContainText(site.copy.failedPayment);
   });

@@ -78,6 +78,7 @@ test.describe('BBM2-65 Blog overview and single', () => {
 // Uses the permanent TEST content created by scripts/seed-bulbbarn-blog.cjs.
 test.describe('BBM2-65 Blog single (seeded TEST content)', () => {
   const showcase = seed.showcase;
+  // stable: Amasty Blog's post-content class; the post body has no landmark of its own.
   const body = page => page.locator('.amblog-post-content');
 
   async function openShowcase(page) {

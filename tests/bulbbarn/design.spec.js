@@ -17,10 +17,13 @@ async function useEnglishStore(page) {
 }
 
 const main = page => page.getByRole('main');
+// The innermost container holding all given parts: blocks on these CMS pages have no landmark or heading role.
+const blockWith = (page, ...parts) => parts.reduce((block, part) => block.filter({ has: part }), main(page).locator('div')).last();
 // The contact block is the part of the page that holds the "Start chat" and "Call now" actions.
-const contactBlock = page => main(page).locator('div, section')
-  .filter({ has: page.getByRole('link', { name: 'Start chat' }) })
-  .filter({ has: page.getByRole('link', { name: 'Call now' }) }).last();
+const contactBlock = page => blockWith(page, page.getByRole('link', { name: 'Start chat' }), page.getByRole('link', { name: 'Call now' }));
+// The hero support block: the "Customer support" heading and its icon links.
+const supportIcons = page => blockWith(page, page.getByRole('heading', { name: design.customerServiceMain.supportHeading }), page.getByRole('link'))
+  .getByRole('link');
 
 async function expectContactBlock(page) {
   for (const text of design.contactBlock) await expect.soft(main(page).getByText(text, { exact: true }).first()).toBeVisible();
@@ -40,16 +43,14 @@ test.describe('BBM2-56 Customer Service main page (design)', () => {
     await expectLoaded(await page.goto(content.mainPath));
     await expect(main(page).getByText(design.customerServiceMain.heroIntro)).toBeVisible();
     await expect(main(page).getByRole('heading', { name: design.customerServiceMain.supportHeading })).toBeVisible();
-    const icons = main(page).getByRole('heading', { name: design.customerServiceMain.supportHeading })
-      .locator('xpath=following-sibling::*[1]').getByRole('link');
+    const icons = supportIcons(page);
     await expect(icons, 'The design shows three support icons').toHaveCount(design.customerServiceMain.supportIcons);
   });
 
   test('[BBM2-56] Open correct destinations from Customer support logos', async ({ page }) => {
     await useEnglishStore(page);
     await expectLoaded(await page.goto(content.mainPath));
-    const icons = main(page).getByRole('heading', { name: design.customerServiceMain.supportHeading })
-      .locator('xpath=following-sibling::*[1]').getByRole('link');
+    const icons = supportIcons(page);
     await expect(icons).not.toHaveCount(0);
     for (const href of await icons.evaluateAll(links => links.map(link => link.getAttribute('href')))) {
       expect.soft(href, 'Each support icon should link to a real phone number, address or page')

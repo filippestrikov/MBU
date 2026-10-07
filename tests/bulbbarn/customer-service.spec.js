@@ -34,14 +34,14 @@ async function expectFaqToggles(page) {
 test.describe('BBM2-56 Customer Service main page', () => {
   test('[BBM2-56] Display Customer service item in the footer', async ({ page }) => {
     await expectLoaded(await page.goto('/'));
-    const link = page.locator('footer').getByRole('link', { name: content.footerLabel, exact: true });
+    const link = page.getByRole('contentinfo').getByRole('link', { name: content.footerLabel, exact: true });
     await link.scrollIntoViewIfNeeded();
     await expect(link).toBeVisible();
   });
 
   test('[BBM2-56] Open Customer Service main page from the footer', async ({ page }) => {
     await expectLoaded(await page.goto('/'));
-    await page.locator('footer').getByRole('link', { name: content.footerLabel, exact: true }).click();
+    await page.getByRole('contentinfo').getByRole('link', { name: content.footerLabel, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`${content.mainPath}$`));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(content.mainHeading);
   });
@@ -94,7 +94,7 @@ test.describe('BBM2-56 Customer Service main page', () => {
     await openMain(page);
     await expect(subjectNav(page)).toBeVisible();
     await expect(faqHeading(page)).toBeVisible();
-    await expect(page.locator('footer').getByRole('link', { name: content.footerLabel, exact: true })).toBeAttached();
+    await expect(page.getByRole('contentinfo').getByRole('link', { name: content.footerLabel, exact: true })).toBeAttached();
     const names = await subjectNames(page);
     expect(names, 'Subject blocks should not be duplicated').toEqual([...new Set(names)]);
   });

@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { site, expectLoaded, addProduct } = require('./shop');
+const { adminLogin, adminMenu } = require('../common/magento-admin');
 
 test.describe('PDI-15 / PDI-139 smoke', () => {
   test('[PDI-15] Smoke-test storefront after module updates', async ({ page }) => {
@@ -18,17 +19,12 @@ test.describe('PDI-15 / PDI-139 smoke', () => {
 
   test('[PDI-15] Smoke-test Magento Admin after module updates', async ({ page }) => {
     test.skip(!process.env.PARFUMDEO_ADMIN_URL, 'Needs PARFUMDEO_ADMIN_* in .env.');
-    await page.goto(process.env.PARFUMDEO_ADMIN_URL);
-    await page.getByRole('textbox', { name: /username|gebruikersnaam/i }).fill(process.env.PARFUMDEO_ADMIN_USER);
-    await page.getByRole('textbox', { name: /password|wachtwoord/i }).fill(process.env.PARFUMDEO_ADMIN_PASSWORD);
-    await page.getByRole('button', { name: /sign in/i }).click();
-    await expect(page.locator('#nav')).toBeVisible({ timeout: 30_000 });
-    for (const [section, item] of [[/Catalog/, 'Products'], [/Sales/, 'Orders'], [/Stores/, 'Configuration']]) {
-      const href = await page.locator('#nav > li').filter({ hasText: section }).first()
-        .getByRole('link', { name: item, exact: true, includeHidden: true }).first().getAttribute('href');
-      const response = await page.goto(href);
-      expect(response.status(), `${item} should open`).toBeLessThan(400);
-      await expect(page.locator('.page-title, h1').first()).toBeVisible();
+    await adminLogin(page, {
+      url: process.env.PARFUMDEO_ADMIN_URL, user: process.env.PARFUMDEO_ADMIN_USER, password: process.env.PARFUMDEO_ADMIN_PASSWORD,
+    });
+    for (const [section, item] of [['catalog', 'Products'], ['sales', 'Orders'], ['stores', 'Configuration']]) {
+      await adminMenu(page, section, item);
+      await expect(page.getByRole('heading', { level: 1 }), `${item} should show its page title`).toBeVisible();
     }
   });
 });
@@ -57,10 +53,12 @@ test.describe('PDI-19 reCAPTCHA', () => {
     const configured = await recaptchaConfigured(page);
     test.skip(!configured, 'reCAPTCHA is not configured on dev (Confluence PDI-56: reCAPTCHA is only active on PRD).');
     await page.getByRole('main').getByRole('textbox').first().click();
-    await page.waitForTimeout(3000);
-    const visibleBadges = await page.locator('.grecaptcha-badge').evaluateAll(badges =>
+    // stable: Google renders the badge with this class and no accessible name.
+    const badge = page.locator('.grecaptcha-badge');
+    await expect(badge, 'reCAPTCHA should render its badge').toBeAttached({ timeout: 15_000 });
+    const visibleBadges = () => badge.evaluateAll(badges =>
       badges.filter(b => getComputedStyle(b).visibility !== 'hidden' && b.getBoundingClientRect().width > 0 && getComputedStyle(b).opacity !== '0').length);
-    expect(visibleBadges, 'The reCAPTCHA badge should be hidden').toBe(0);
+    await expect.poll(visibleBadges, { message: 'The reCAPTCHA badge should be hidden' }).toBe(0);
   });
 });
 
