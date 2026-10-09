@@ -9,9 +9,8 @@ const { options: optionIds } = require('./fixtures/option-ids.json');
 
 const decode = text => text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
 
-// { sku: { field: value, prices: { '10': 23.4, ... }, images: [{ type: 'F2', url }] } } for one language file.
-function readTestData(language) {
-  const xml = fs.readFileSync(path.join(__dirname, 'fixtures', `${language}TestData.xml`), 'utf8');
+// { sku: { field: value, prices: { '10': 23.4, ... }, images: [{ type: 'F2', url }] } } for one Velder XML file.
+function parseFeed(xml) {
   const products = {};
   for (const [block] of xml.matchAll(/<product_detail>[\s\S]*?<\/product_detail>/g)) {
     const product = { prices: {}, images: [] };
@@ -22,6 +21,7 @@ function readTestData(language) {
   }
   return products;
 }
+const readTestData = language => parseFeed(fs.readFileSync(path.join(__dirname, 'fixtures', `${language}TestData.xml`), 'utf8'));
 const testData = { nl: readTestData('nl'), en: readTestData('en') };
 
 // --- Magento: storefront GraphQL per store view (REST is blocked by the HTTP auth on ACC) ---
@@ -97,5 +97,5 @@ async function adminProductRows(page, sku) {
 }
 
 module.exports = {
-  expected, testData, productsInStore, attributes, fileName, normalize, expectedOptionIds, loginAsCustomer, adminProductRows,
+  expected, testData, parseFeed, productsInStore, attributes, fileName, normalize, expectedOptionIds, loginAsCustomer, adminProductRows,
 };

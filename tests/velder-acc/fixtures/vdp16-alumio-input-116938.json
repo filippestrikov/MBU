@@ -1,0 +1,69 @@
+{
+  "m3status": "20",
+  "status": "1",
+  "sku": "116938",
+  "m3_description": "MANCHEGO DO 3M MAESE MIGUEL 3.1K",
+  "commerciele_benaming": "Manchego DOP 3 maanden gerijpt",
+  "commerciele_benaming_EN": "Manchego DOP 3 months",
+  "warenwettelijke_naam": "Queso Manchego (BOB) 50+",
+  "warenwettelijke_naam_EN": "Queso Manchego (PDO) 50% f.i.d.m. ",
+  "product_beschrijving": "Klassieke schapenkaas uit de Zuid-Spaanse provincie La Mancha met een intens zuivere smaak. Kenmerkend is de stevige structuur en de diepe smaak die rijk is aan nuances van kruiden en noten. Deze kaas wordt veelal gegeten met olijfolie en fruitige confituren.",
+  "product_beschrijving_EN": "The Manchego is a classic sheep's cheese from southern Spain with an intensely pure flavour which is rich in nutty nuances. In Spain, they usually eat this cheese with olive oil and fruit jams.",
+  "declaratie": "gepasteuriseerde Manchega **schapenmelk**, zout, microbieel stremsel, zuursel",
+  "declaratie_EN": "pasteurized Manchega sheep's **milk**, salt, microbial rennet, starter",
+  "eenheid": "ST",
+  "aantal_per_eenheid": "1.000000000",
+  "Nettogewicht": "3.100000",
+  "Gewichtseenheid": "KG",
+  "pricing": {
+    "price_group": [
+      {
+        "@id": "40",
+        "@prijs": "0.000010",
+        "#": ""
+      },
+      {
+        "@id": "RE",
+        "@prijs": "13.500000",
+        "#": ""
+      },
+      {
+        "@id": "20",
+        "@prijs": "14.650000",
+        "#": ""
+      },
+      {
+        "@id": "10",
+        "@prijs": "13.050000",
+        "#": ""
+      }
+    ]
+  },
+  "lov_age": "n.v.t.",
+  "lov_biologisch": "nee",
+  "lov_europese_bescherming": "PDO",
+  "lov_geschiktvoorvegtariers": "ja",
+  "lov_hittebehandeling_melk": "gepasteuriseerd",
+  "lov_product_landvanherkomst": "Spanje",
+  "lov_rauwmelks": "nee",
+  "lov_puntschaal": "2",
+  "lov_smaaktags": "mild,nootachtig",
+  "lov_typemelk": "schapenmelk",
+  "lov_weidezuivelproduct": "nee",
+  "voedingswaarden_kcal": "412",
+  "voedingswaarden_kj": "1.723",
+  "voedingswaarden_vetten": "34,30",
+  "voedingswaarden_vetzuren": "24,50",
+  "voedingswaarden_koolhydraten": "1,7",
+  "voedingswaarden_suikers": "1,5",
+  "voedingswaarden_eiwit": "24,20",
+  "voedingswaarden_zout": "1,40",
+  "allergenen": "Melk,Lactose",
+  "images": {
+    "image": {
+      "@type": "F2",
+      "#": "https://velder.xcdn.nl/prd_116938_afbeelding_FIC1_F2_wit_val_ja_intern.jpg?d=2&xv=2"
+    }
+  },
+  "productsheet_url": "https://velder.saas.contentserv.com/admin/ImageServer.php?ID=90c85f408823bf1daeecb7faf5b52ee05e17263a23f0f71d82ee6610d667815e:938653@mhr520&rand=ee6935f21f04f2d1e6926ad0cbed34c4&lang=2&force=1&download=true&omitPreview=true"
+}

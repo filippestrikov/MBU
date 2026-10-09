@@ -1,0 +1,157 @@
+[
+    {
+        "product": {
+            "sku": "116938",
+            "name": "Manchego DOP 3 months",
+            "attribute_set_id": 10,
+            "price": 0,
+            "status": 1,
+            "visibility": 1,
+            "type_id": "simple",
+            "weight": 3.1,
+            "extension_attributes": {
+                "website_ids": [
+                    1
+                ]
+            },
+            "custom_attributes": [
+                {
+                    "attribute_code": "txt_artikelnummer",
+                    "value": "116938"
+                },
+                {
+                    "attribute_code": "txt_m3_naam",
+                    "value": "MANCHEGO DO 3M MAESE MIGUEL 3.1K"
+                },
+                {
+                    "attribute_code": "txt_commercielebenaming",
+                    "value": "Manchego DOP 3 months"
+                },
+                {
+                    "attribute_code": "txt_warenwettelijkenaam",
+                    "value": "Queso Manchego (PDO) 50% f.i.d.m. "
+                },
+                {
+                    "attribute_code": "general_price",
+                    "value": "0.000010"
+                },
+                {
+                    "attribute_code": "customer_groups",
+                    "value": "40 | re | 20 | 10"
+                },
+                {
+                    "attribute_code": "txt_m3_status",
+                    "value": "20"
+                },
+                {
+                    "attribute_code": "short_description",
+                    "value": "The Manchego is a classic sheep's cheese from southern Spain with an intensely pure flavour which is rich in nutty nuances. In Spain, they usually eat this cheese with olive oil and fruit jams."
+                },
+                {
+                    "attribute_code": "description",
+                    "value": "The Manchego is a classic sheep's cheese from southern Spain with an intensely pure flavour which is rich in nutty nuances. In Spain, they usually eat this cheese with olive oil and fruit jams."
+                },
+                {
+                    "attribute_code": "form_declaratietekstfinal",
+                    "value": "pasteurized Manchega sheep's <b>milk<\/b>, salt, microbial rennet, starter"
+                },
+                {
+                    "attribute_code": "verpakkingseenheid",
+                    "value": "ST 1"
+                },
+                {
+                    "attribute_code": "nmbruom_netto_gewicht_ce",
+                    "value": "3100.000 g"
+                },
+                {
+                    "attribute_code": "general_ehd",
+                    "value": "KG"
+                },
+                {
+                    "attribute_code": "nmbr_gemenergiewaardekcal_per1",
+                    "value": "412"
+                },
+                {
+                    "attribute_code": "nmbr_gemenergiewaardekj_per100",
+                    "value": "1.723"
+                },
+                {
+                    "attribute_code": "nmbr_vetteng_per100g",
+                    "value": "34,30"
+                },
+                {
+                    "attribute_code": "nmbr_verzadigdevetzureng_per10",
+                    "value": "24,50"
+                },
+                {
+                    "attribute_code": "nmbr_koolhydrateng_per100g",
+                    "value": "1,7"
+                },
+                {
+                    "attribute_code": "nmbr_suikersg_per100g",
+                    "value": "1,5"
+                },
+                {
+                    "attribute_code": "nmbr_eiwitteng_per100g",
+                    "value": "24,20"
+                },
+                {
+                    "attribute_code": "nmbr_totaalzoutg_per100g",
+                    "value": "1,40"
+                },
+                {
+                    "attribute_code": "product_sheet",
+                    "value": "https:\/\/velder.saas.contentserv.com\/admin\/ImageServer.php?ID=90c85f408823bf1daeecb7faf5b52ee05e17263a23f0f71d82ee6610d667815e:938653@mhr520&rand=ee6935f21f04f2d1e6926ad0cbed34c4&lang=2&force=1&download=true&omitPreview=true"
+                },
+                {
+                    "attribute_code": "tax_class_id",
+                    "value": "2"
+                },
+                {
+                    "attribute_code": "piece_kg",
+                    "value": "5658"
+                },
+                {
+                    "attribute_code": "lov_typemelk",
+                    "value": "5575"
+                },
+                {
+                    "attribute_code": "lov_product_landvanherkomst",
+                    "value": "5603"
+                },
+                {
+                    "attribute_code": "lov_biologisch",
+                    "value": "5510"
+                },
+                {
+                    "attribute_code": "lov_geschiktvoorvegtariers",
+                    "value": "5569"
+                },
+                {
+                    "attribute_code": "lov_hittebehandeling_melk",
+                    "value": "5512"
+                },
+                {
+                    "attribute_code": "lov_rauwmelks",
+                    "value": "5513"
+                },
+                {
+                    "attribute_code": "lov_puntschaal",
+                    "value": "5572"
+                },
+                {
+                    "attribute_code": "lov_weidezuivelproduct",
+                    "value": "5565"
+                },
+                {
+                    "attribute_code": "allergenen",
+                    "value": "5553,5552"
+                },
+                {
+                    "attribute_code": "lov_smaaktags",
+                    "value": "5578,5608"
+                }
+            ]
+        }
+    }
+]

@@ -53,6 +53,25 @@ representative option ids, image names). Text and attribute expectations are rea
 | Give the lowest supported image the four image roles | TC-005 | image, small_image, thumbnail, swatch_image = F2 |
 | Fictional test SKUs do not exist / existing SKU present | TC-000, TC-008 | `npm run test:vdp:cleanup` |
 
+## VDP-16 EN translation fields (`tests/velder-acc/vdp16-en-translations.spec.js`)
+
+`*_EN` fields (commercial name, legal name, description, declaration) go to the EN store views of PL28/PL40 as
+store-view values. Sample: SKU 116938 as Alumio received it and sent it to Magento (fixtures
+`vdp16-alumio-input-116938.json` / `vdp16-magento-request-116938.json`, from Maksym's VDP-16 comment of 2026-10-08).
+
+`npm run test:vdp -- tests/velder-acc/vdp16-en-translations.spec.js` checks the sample in the EN and NL store views,
+the default scope (Admin) and the payload Alumio sent. With `VDP_FEED=<path to WebShop_Artikelen_*.xml>` it also
+checks every product of that feed, but only in store views whose `general_price` equals the feed price (proof that
+this import updated them; ACC also holds older runs and the daily feed). Skipped products are listed as an annotation.
+The NL `name` is left out of the feed-wide check (open question 1).
+
+Result 2026-10-09 (feed `WebShop_Artikelen_20260930_083752.xml`): sample tests pass; feed-wide EN texts and the
+empty-EN rule pass on every updated EN store view. 18 SKUs with EN text show no store-view price and the old Dutch
+texts in their EN store view (not updated by this import): 133953, 148558, 175124, 177936, 177937, 193774, 193778,
+193823, 193827, 193837, 193838, 193859, 193872, 193873, 193874, 193885 (en_sv40), 180671, 193826 (en_sv28).
+NL-only side notes: 186484 (nl_sv_pl_re) has a blank commercial name and description, 172884 (nl_sv20) shows
+"Formaggio da Pasta Poeder" instead of "… strooikaas".
+
 ## Not automated (Alumio internals, manual)
 
 TC-000 configuration and scheduler pause, TC-001/002 webhook and storage, TC-004 bulk-status polling, TC-005
