@@ -100,7 +100,10 @@ test.describe('VDP-16 EN translation fields', () => {
         const { priceGroup } = expected.stores[store];
         const skus = Object.values(feed).filter(product => storesFor(product, language).includes(store)).map(product => product.sku);
         for (let i = 0; i < skus.length; i += 20) {
-          for (const product of Object.values(await productsInStore(request, store, skus.slice(i, i + 20)))) {
+          const found = await productsInStore(request, store, skus.slice(i, i + 20));
+          // A product the store view does not return was not updated either; list it instead of dropping it.
+          notUpdated.push(...skus.slice(i, i + 20).filter(sku => !found[sku]).map(sku => `${sku}@${store} (not visible)`));
+          for (const product of Object.values(found)) {
             const source = feed[product.sku];
             const updated = Math.abs(Number(attributes(product).general_price) - source.prices[priceGroup]) < 1e-6;
             if (updated) result.push({ store, source, product });

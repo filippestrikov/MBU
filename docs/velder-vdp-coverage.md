@@ -72,6 +72,12 @@ texts in their EN store view (not updated by this import): 133953, 148558, 17512
 NL-only side notes: 186484 (nl_sv_pl_re) has a blank commercial name and description, 172884 (nl_sv20) shows
 "Formaggio da Pasta Poeder" instead of "… strooikaas".
 
+Re-run 2026-10-12 (same feed): every PL28/PL40 price in this feed is a placeholder (0.00001 / 0.0001 / 0.01), which
+explains the 18 SKUs above. An import between 11 Oct 23:50 and 12 Oct 00:51 left them at €0.00 in Admin and not
+visible in any store view (193778 and 193838 are no longer in Admin). Products a store view does not return are now
+listed as "(not visible)" instead of being dropped. Not visible: en_sv28 88/89, en_sv40 314/404, nl_sv10 906/1148,
+nl_sv20 1107/1363, nl_sv_pl_re 2/308. All visible products pass. 186484 is fixed.
+
 ## Not automated (Alumio internals, manual)
 
 TC-000 configuration and scheduler pause, TC-001/002 webhook and storage, TC-004 bulk-status polling, TC-005
