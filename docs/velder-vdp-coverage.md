@@ -78,6 +78,12 @@ visible in any store view (193778 and 193838 are no longer in Admin). Products a
 listed as "(not visible)" instead of being dropped. Not visible: en_sv28 88/89, en_sv40 314/404, nl_sv10 906/1148,
 nl_sv20 1107/1363, nl_sv_pl_re 2/308. All visible products pass. 186484 is fixed.
 
+Re-test 2026-10-13 after Maksym's single-price-group fix: unchanged. The 18 SKUs and the sampled hidden NL products
+still show Admin "updated at" 11–12 Oct (only 116938 was updated, 13 Oct 05:48), so the reprocessing did not reach
+them. Correction: 193778 and 193838 were never missing from Admin; the keyword search missed them, so
+`adminProductRows` now uses the SKU column filter. Empty-EN rule confirmed by Danny (13 Oct); placeholder prices
+(< 0.01) are out of scope until Velder decides.
+
 ## Not automated (Alumio internals, manual)
 
 TC-000 configuration and scheduler pause, TC-001/002 webhook and storage, TC-004 bulk-status polling, TC-005

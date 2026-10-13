@@ -85,11 +85,13 @@ async function adminProductRows(page, sku) {
   await admin.adminLogin(page, adminCredentials());
   await admin.adminMenu(page, 'catalog', 'Products');
   await admin.clearGridFilters(page);
-  await admin.gridSearchBox(page).fill(sku);
-  await admin.gridSearchBox(page).press('Enter');
-  // Saved filters were cleared, so the only active filter is this keyword and "0 records" means the SKU does not exist.
-  await expect(page.getByText(/^Active filters:/).first(), 'The keyword search should be applied').toBeVisible({ timeout: 30_000 });
-  // The keyword search is full-text, so keep only rows with a cell that is exactly the SKU.
+  // The SKU column filter, not the keyword search: the full-text keyword index on ACC misses existing SKUs.
+  await page.getByRole('button', { name: 'Filters' }).filter({ visible: true }).first().click();
+  await page.locator('input[name="sku"]').filter({ visible: true }).fill(sku);
+  await page.getByRole('button', { name: /Apply Filters|Filters toepassen/ }).click();
+  // Saved filters were cleared, so the only active filter is this SKU and "0 records" means the SKU does not exist.
+  await expect(page.getByText(/^Active filters:/).first(), 'The SKU filter should be applied').toBeVisible({ timeout: 30_000 });
+  // The SKU filter matches substrings, so keep only rows with a cell that is exactly the SKU.
   const rows = admin.gridRows(page).filter({ has: page.getByText(sku, { exact: true }) });
   // The grid shows either matching rows or "We couldn't find any records".
   await expect(rows.first().or(page.getByText(/couldn't find any records|geen records/i).first())).toBeVisible({ timeout: 60_000 });
